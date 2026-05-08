@@ -24,5 +24,5 @@ class BaseMCDA(ABC):
             )
 
     @abstractmethod
-    def rank(self) -> np.ndarray:
+    def rank(self) -> list[int]:
         pass

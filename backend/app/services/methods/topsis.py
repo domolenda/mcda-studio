@@ -23,11 +23,12 @@ class TOPSIS(BaseMCDA):
         scores = euclidean_nis / (euclidean_pis + euclidean_nis)
         return np.round(scores, 3)
 
-    def rank(self) -> np.ndarray:
+    def rank(self) -> list[int]:
         self._validate()
         weighted_matrix = self._calc_weighted_matrix()
         pis, nis = self._calc_pis_nis(weighted_matrix)
         euclidean_pis = self._euclidean_distance(weighted_matrix, pis)
         euclidean_nis = self._euclidean_distance(weighted_matrix, nis)
         scores = self._score(euclidean_pis, euclidean_nis)
-        return (np.argsort(scores)[::-1] + 1).tolist()
+        ranked = (np.argsort(scores)[::-1] + 1).tolist()
+        return ranked
