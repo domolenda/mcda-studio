@@ -1,4 +1,3 @@
-import numpy as np
 from fastapi import APIRouter, HTTPException
 
 from app.schemas.ranking import RankingRequest, RankingResponse
