@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
+from app.routers import health, normalization
 
 app = FastAPI(
     title=settings.app_title,
@@ -16,6 +17,5 @@ app.add_middleware(
 )
 
 
-@app.get("/", response_model=dict)
-def root() -> dict:
-    return {"status": "ok"}
+app.include_router(health.router)
+app.include_router(normalization.router)
