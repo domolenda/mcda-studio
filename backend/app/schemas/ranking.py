@@ -26,4 +26,4 @@ class RankingRequest(BaseModel):
 class RankingResponse(BaseModel):
     ranking: list[int]
 
-    model_config = {"json_schema_extra": {"examples": [{"ranking": [1, 3, 2]}]}}
+    model_config = {"json_schema_extra": {"examples": [{"ranking": [2, 1, 3]}]}}
