@@ -15,6 +15,7 @@ def min_max_normalization(request: NormalizationRequest):
     norm = MinMaxNormalization(matrix, types)
     try:
         result = norm.normalize()
-        return NormalizationResponse(normalized_matrix=result.tolist())
+        rounded = np.round(result, 4).tolist()
+        return NormalizationResponse(normalized_matrix=rounded)
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
