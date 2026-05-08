@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException
 from app.schemas.ranking import RankingRequest, RankingResponse
 from app.services.methods.topsis import TOPSIS
 
-router = APIRouter(prefix="/rank")
+router = APIRouter(prefix="/ranking")
 
 
 @router.post("/topsis", response_model=RankingResponse)
