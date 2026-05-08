@@ -7,15 +7,16 @@ router = APIRouter(prefix="/ranking")
 
 
 @router.post("/topsis", response_model=RankingResponse)
-async def rank(request: RankingRequest) -> RankingResponse:
-    norm_matrix = request.normalized_matrix
+def rank(request: RankingRequest) -> RankingResponse:
+    matrix = request.matrix
     weights = request.weights
     types = request.types
+    normalization_method = request.normalization_method
 
-    topsis = TOPSIS(norm_matrix, weights, types)
+    topsis = TOPSIS()
 
     try:
-        result = topsis.rank()
+        result = topsis.rank(matrix, weights, types, normalization_method)
         return RankingResponse(ranking=result)
-    except Exception as e:
+    except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))

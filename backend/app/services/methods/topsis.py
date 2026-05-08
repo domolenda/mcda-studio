@@ -1,11 +1,12 @@
 import numpy as np
 
 from app.services.methods.base import BaseMCDA
+from app.services.normalization.registry import get_normalization
 
 
 class TOPSIS(BaseMCDA):
-    def _calc_weighted_matrix(self) -> np.ndarray:
-        return self.normalized_matrix * self.weights
+    def _calc_weighted_matrix(self, normalized_matrix, weights) -> np.ndarray:
+        return normalized_matrix * weights
 
     def _calc_pis_nis(
         self, weighted_matrix: np.ndarray
@@ -23,9 +24,20 @@ class TOPSIS(BaseMCDA):
         scores = euclidean_nis / (euclidean_pis + euclidean_nis)
         return np.round(scores, 3)
 
-    def rank(self) -> list[int]:
-        self._validate()
-        weighted_matrix = self._calc_weighted_matrix()
+    def rank(
+        self,
+        matrix: list[list[float]],
+        weights: list[float],
+        types: list[int],
+        normalization_method: str | None = None,
+    ) -> list[int]:
+        method = normalization_method or "min_max"
+        np_matrix, np_weights, np_types = self._validate(matrix, weights, types)
+
+        normalization = get_normalization(method)
+        normalized_matrix = normalization(np_matrix, np_types).normalize()
+
+        weighted_matrix = self._calc_weighted_matrix(normalized_matrix, np_weights)
         pis, nis = self._calc_pis_nis(weighted_matrix)
         euclidean_pis = self._euclidean_distance(weighted_matrix, pis)
         euclidean_nis = self._euclidean_distance(weighted_matrix, nis)
