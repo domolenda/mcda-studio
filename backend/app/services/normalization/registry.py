@@ -1,9 +1,11 @@
 from typing import Any
 
+from app.services.normalization.linear import LinearNormalization
 from app.services.normalization.min_max import MinMaxNormalization
 
 NORMALIZATION_REGISTRY: dict[str, Any] = {
     "min_max": MinMaxNormalization,
+    "linear": LinearNormalization,
 }
 
 
