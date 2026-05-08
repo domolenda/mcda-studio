@@ -9,7 +9,7 @@ router = APIRouter(prefix="/normalization")
 
 @router.post("/min-max", response_model=NormalizationResponse)
 def min_max_normalization(request: NormalizationRequest):
-    matrix = np.array(request.matrix)
+    matrix = request.matrix
     types = request.types
 
     norm = MinMaxNormalization(matrix, types)

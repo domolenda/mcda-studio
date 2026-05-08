@@ -4,7 +4,7 @@ from app.services.normalization.base import BaseNormalization
 
 
 class MinMaxNormalization(BaseNormalization):
-    def __init__(self, matrix: np.ndarray, types: list[int]):
+    def __init__(self, matrix: list[list[float]], types: list[int]):
         super().__init__(matrix)
         self.types = types
 
