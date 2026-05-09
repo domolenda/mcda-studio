@@ -10,3 +10,7 @@ __pycache__/
 
 # uv
 .python-version
+
+# Pytest
+.pytest_cache/
+pytest_cache/
