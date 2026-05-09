@@ -1,7 +1,13 @@
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.ranking import RankingRequest, RankingResponse, WASPASRequest
+from app.schemas.ranking import (
+    RankingRequest,
+    RankingResponse,
+    VIKORRequest,
+    WASPASRequest,
+)
 from app.services.methods.topsis import TOPSIS
+from app.services.methods.vikor import VIKOR
 from app.services.methods.waspas import WASPAS
 
 router = APIRouter(prefix="/ranking")
@@ -35,6 +41,22 @@ def rank_waspas(request: WASPASRequest) -> RankingResponse:
 
     try:
         result = waspas.rank(matrix, weights, types, normalization_method, lambda_)
+        return RankingResponse(ranking=result)
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+
+@router.post("/vikor", response_model=RankingResponse)
+def rank_vikor(request: VIKORRequest) -> RankingResponse:
+    matrix = request.matrix
+    weights = request.weights
+    types = request.types
+    v = request.v
+
+    vikor = VIKOR()
+
+    try:
+        result = vikor.rank(matrix, weights, types, v)
         return RankingResponse(ranking=result)
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))

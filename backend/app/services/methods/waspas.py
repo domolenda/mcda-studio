@@ -23,5 +23,5 @@ class WASPAS(BaseMCDA):
         wpm_scores = np.prod(np.power(normalized_matrix, np_weights), axis=1)
         scores = lambda_ * wsm_scores + (1 - lambda_) * wpm_scores
 
-        ranked = (np.argsort(scores)[::-1] + 1).tolist()
+        ranked = (np.argsort(np.argsort(scores)[::-1]) + 1).tolist()
         return ranked

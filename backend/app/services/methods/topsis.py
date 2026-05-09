@@ -42,5 +42,5 @@ class TOPSIS(BaseMCDA):
         euclidean_pis = self._euclidean_distance(weighted_matrix, pis)
         euclidean_nis = self._euclidean_distance(weighted_matrix, nis)
         scores = self._score(euclidean_pis, euclidean_nis)
-        ranked = (np.argsort(scores)[::-1] + 1).tolist()
+        ranked = (np.argsort(np.argsort(scores)[::-1]) + 1).tolist()
         return ranked
