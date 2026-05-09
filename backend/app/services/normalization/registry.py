@@ -8,6 +8,17 @@ NORMALIZATION_REGISTRY: dict[str, Any] = {
     "linear": LinearNormalization,
 }
 
+NORMALIZATION_METADATA: list[dict[str, Any]] = [
+    {
+        "id": "min_max",
+        "name": "Min-Max",
+    },
+    {
+        "id": "linear",
+        "name": "Linear",
+    },
+]
+
 
 def get_normalization(method: str) -> Any:
     if method not in NORMALIZATION_REGISTRY:
@@ -15,3 +26,7 @@ def get_normalization(method: str) -> Any:
             f"Unknown normalization method: '{method}'. Available methods: {list(NORMALIZATION_REGISTRY.keys())}"
         )
     return NORMALIZATION_REGISTRY[method]
+
+
+def get_normalization_methods() -> list[dict[str, Any]]:
+    return NORMALIZATION_METADATA
