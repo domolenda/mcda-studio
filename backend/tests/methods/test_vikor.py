@@ -30,3 +30,37 @@ def test_vikor_weights_too_long(monitor_data):
     weights_long = [0.24, 0.17, 0.16, 0.03, 0.26, 0.1, 0.04]
     with pytest.raises(ValueError):
         vikor.rank(monitor_data["matrix"], weights_long, monitor_data["types"])
+
+
+def test_vikor_different_v(monitor_data):
+    vikor = VIKOR()
+    result = vikor.rank(
+        monitor_data["matrix"],
+        monitor_data["weights"],
+        monitor_data["types"],
+        v=0.9,
+    )
+    assert result == [9, 1, 2, 3, 7, 6, 8, 4, 5]
+    assert len(result) == len(monitor_data["matrix"])
+
+
+def test_vikor_v_too_high(monitor_data):
+    vikor = VIKOR()
+    with pytest.raises(ValueError):
+        vikor.rank(
+            monitor_data["matrix"],
+            monitor_data["weights"],
+            monitor_data["types"],
+            v=1.1,
+        )
+
+
+def test_vikor_v_too_small(monitor_data):
+    vikor = VIKOR()
+    with pytest.raises(ValueError):
+        vikor.rank(
+            monitor_data["matrix"],
+            monitor_data["weights"],
+            monitor_data["types"],
+            v=-0.1,
+        )

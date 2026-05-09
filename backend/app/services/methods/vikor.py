@@ -4,6 +4,10 @@ from app.services.methods.base import BaseMCDA
 
 
 class VIKOR(BaseMCDA):
+    def _validate_v(self, v: float) -> None:
+        if not 0.0 <= v <= 1.0:
+            raise ValueError("V must be between 0.0 and 1.0")
+
     def rank(
         self,
         matrix: list[list[float]],
@@ -12,6 +16,7 @@ class VIKOR(BaseMCDA):
         v: float = 0.5,
     ) -> list[int]:
         np_matrix, np_weights, np_types = self._validate(matrix, weights, types)
+        self._validate_v(v)
 
         f_best = np.where(
             np_types > 0, np.max(np_matrix, axis=0), np.min(np_matrix, axis=0)

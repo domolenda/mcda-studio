@@ -5,6 +5,10 @@ from app.services.normalization.registry import get_normalization
 
 
 class WASPAS(BaseMCDA):
+    def _validate_lambda(self, lambda_: float) -> None:
+        if not 0.0 <= lambda_ <= 1.0:
+            raise ValueError("Lambda must be between 0.0 and 1.0")
+
     def rank(
         self,
         matrix: list[list[float]],
@@ -15,6 +19,7 @@ class WASPAS(BaseMCDA):
     ) -> list[int]:
         method = normalization_method or "linear"
         np_matrix, np_weights, np_types = self._validate(matrix, weights, types)
+        self._validate_lambda(lambda_)
 
         normalization = get_normalization(method)
         normalized_matrix = normalization(np_matrix, np_types).normalize()

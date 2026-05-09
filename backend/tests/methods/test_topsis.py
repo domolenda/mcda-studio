@@ -30,3 +30,15 @@ def test_topsis_weights_too_long(monitor_data):
     weights_long = [0.24, 0.17, 0.16, 0.03, 0.26, 0.1, 0.04]
     with pytest.raises(ValueError):
         topsis.rank(monitor_data["matrix"], weights_long, monitor_data["types"])
+
+
+def test_topsis_different_normalization(monitor_data):
+    topsis = TOPSIS()
+    result = topsis.rank(
+        monitor_data["matrix"],
+        monitor_data["weights"],
+        monitor_data["types"],
+        normalization_method="linear",
+    )
+    assert result == [9, 4, 3, 1, 7, 6, 2, 8, 5]
+    assert len(result) == len(monitor_data["matrix"])

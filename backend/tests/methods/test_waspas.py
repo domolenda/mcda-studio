@@ -30,3 +30,49 @@ def test_waspas_weights_too_long(monitor_data):
     weights_long = [0.24, 0.17, 0.16, 0.03, 0.26, 0.1, 0.04]
     with pytest.raises(ValueError):
         waspas.rank(monitor_data["matrix"], weights_long, monitor_data["types"])
+
+
+def test_waspas_different_normalization(monitor_data):
+    waspas = WASPAS()
+    result = waspas.rank(
+        monitor_data["matrix"],
+        monitor_data["weights"],
+        monitor_data["types"],
+        normalization_method="min_max",
+    )
+    assert result == [9, 1, 2, 3, 8, 6, 7, 4, 5]
+    assert len(result) == len(monitor_data["matrix"])
+
+
+def test_waspas_different_lambda(monitor_data):
+    waspas = WASPAS()
+    result = waspas.rank(
+        monitor_data["matrix"],
+        monitor_data["weights"],
+        monitor_data["types"],
+        lambda_=0.9,
+    )
+    assert result == [9, 2, 5, 1, 8, 7, 3, 6, 4]
+    assert len(result) == len(monitor_data["matrix"])
+
+
+def test_waspas_lambda_too_high(monitor_data):
+    waspas = WASPAS()
+    with pytest.raises(ValueError):
+        waspas.rank(
+            monitor_data["matrix"],
+            monitor_data["weights"],
+            monitor_data["types"],
+            lambda_=1.1,
+        )
+
+
+def test_waspas_lambda_too_small(monitor_data):
+    waspas = WASPAS()
+    with pytest.raises(ValueError):
+        waspas.rank(
+            monitor_data["matrix"],
+            monitor_data["weights"],
+            monitor_data["types"],
+            lambda_=-0.1,
+        )
