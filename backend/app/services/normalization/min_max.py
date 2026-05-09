@@ -18,8 +18,6 @@ class MinMaxNormalization(BaseNormalization):
 
     def normalize(self) -> np.ndarray:
         matrix_mask = self._create_types_mask()
-        if self.matrix.shape != matrix_mask.shape:
-            raise ValueError("Matrix and mask must have the same shape")
 
         matrix_min = np.min(self.matrix, axis=0)
         matrix_max = np.max(self.matrix, axis=0)
