@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.routers import comparison, health, methods, ranking
+from app.routers import comparison, health, methods, ranking, weights
 
 app = FastAPI(
     title=settings.app_title,
@@ -21,3 +21,4 @@ app.include_router(health.router)
 app.include_router(ranking.router)
 app.include_router(methods.router)
 app.include_router(comparison.router)
+app.include_router(weights.router)
