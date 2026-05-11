@@ -50,7 +50,6 @@ export function processCSVResult(result: Papa.ParseResult<unknown>): ProcessedPr
   const criteria: Criterion[] = criteriaKeys.map((c) => ({ name: c, type: 1 as const }))
   const processedProjectData: ProcessedProjectData = { dataset, criteria, alternativeKey }
 
-  console.log(processedProjectData)
   return processedProjectData
 }
 
@@ -71,6 +70,5 @@ export function processExcelResult(data: (string | number)[][]): ProcessedProjec
   const criteria: Criterion[] = criteriaKeys.map((c) => ({ name: c, type: 1 }))
   const processedProjectData: ProcessedProjectData = { dataset, criteria, alternativeKey }
 
-  console.log(processedProjectData)
   return processedProjectData
 }

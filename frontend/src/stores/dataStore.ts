@@ -16,10 +16,6 @@ export const useDataStore = defineStore('data', () => {
   function setCriterionType(index: number, type: CriterionType) {
     if (data.value && data.value.criteria[index]) {
       data.value.criteria[index].type = type
-      console.log(
-        'criteria types:',
-        data.value.criteria.map((c) => c.type),
-      )
     }
   }
 

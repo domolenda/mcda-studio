@@ -33,7 +33,6 @@ const onFileSelect = (event: FileUploadSelectEvent) => {
 
 async function processFile(file: File) {
   const extension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase()
-  console.log(extension)
 
   try {
     let result
