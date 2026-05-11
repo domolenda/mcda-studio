@@ -31,6 +31,12 @@ export const useConfigStore = defineStore('config', () => {
     methodsConfig.value = null
   }
 
+  function clearConfig() {
+    clearMethodList()
+    clearWeights()
+    clearMethodsConfig()
+  }
+
   return {
     methodList,
     setMethodList,
@@ -41,5 +47,6 @@ export const useConfigStore = defineStore('config', () => {
     methodsConfig,
     setMethodsConfig,
     clearMethodsConfig,
+    clearConfig,
   }
 })

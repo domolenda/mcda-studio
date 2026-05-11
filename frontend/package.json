@@ -17,16 +17,19 @@
   "dependencies": {
     "@primeuix/themes": "^2.0.3",
     "@tailwindcss/vite": "^4.3.0",
+    "papaparse": "^5.5.3",
     "pinia": "^3.0.4",
     "primevue": "^4.5.5",
     "tailwindcss": "^4.3.0",
     "tailwindcss-primeui": "^0.6.1",
     "vue": "^3.5.32",
-    "vue-router": "^5.0.4"
+    "vue-router": "^5.0.4",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tsconfig/node24": "^24.0.4",
     "@types/node": "^24.12.2",
+    "@types/papaparse": "^5.5.2",
     "@vitejs/plugin-vue": "^6.0.6",
     "@vue/eslint-config-typescript": "^14.7.0",
     "@vue/tsconfig": "^0.9.1",

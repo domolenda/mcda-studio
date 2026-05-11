@@ -8,7 +8,7 @@
       <Button
         size="large"
         rounded
-        class="px-8 py-4 text-lg font-bold shadow-lg bg-emerald-500 text-white border-emerald-500 hover:shadow-primary-600 hover:brightness-110 transition-all cursor-pointer"
+        class="px-8 py-4 text-lg font-bold shadow-lg bg-emerald-500 text-white border-emerald-500 hover:shadow-primary-600 hover:brightness-110 transition-all cursor-pointer rounded-2xl"
       >
         Get Started
       </Button>

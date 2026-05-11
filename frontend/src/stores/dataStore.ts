@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { type ProjectData } from '@/types'
+import type { ProcessedProjectData } from '@/types'
 
 export const useDataStore = defineStore('data', () => {
-  const data = ref<ProjectData | null>(null)
+  const data = ref<ProcessedProjectData | null>(null)
 
-  function setData(newData: ProjectData) {
+  function setData(newData: ProcessedProjectData) {
     data.value = newData
   }
 

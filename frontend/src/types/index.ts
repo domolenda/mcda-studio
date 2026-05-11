@@ -104,3 +104,7 @@ export interface SingleRankingResponse {
 export interface WeightsResponse {
   weights: number[]
 }
+
+export interface ProcessedProjectData extends ProjectData {
+  alternativeKey: string
+}
