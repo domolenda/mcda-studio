@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { ProcessedProjectData } from '@/types'
+import type { ProcessedProjectData, CriterionType } from '@/types'
 
 export const useDataStore = defineStore('data', () => {
   const data = ref<ProcessedProjectData | null>(null)
@@ -13,5 +13,15 @@ export const useDataStore = defineStore('data', () => {
     data.value = null
   }
 
-  return { data, setData, clearData }
+  function setCriterionType(index: number, type: CriterionType) {
+    if (data.value && data.value.criteria[index]) {
+      data.value.criteria[index].type = type
+      console.log(
+        'criteria types:',
+        data.value.criteria.map((c) => c.type),
+      )
+    }
+  }
+
+  return { data, setData, clearData, setCriterionType }
 })
