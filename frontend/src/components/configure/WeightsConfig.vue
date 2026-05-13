@@ -62,11 +62,6 @@ import { getEntropyWeights, getEqualWeights } from '@/services/api'
 const dataStore = useDataStore()
 const configStore = useConfigStore()
 
-const dataSet = computed(() => dataStore.data?.dataset ?? [])
-const dataMatrix = computed((): number[][] => {
-  return dataSet.value.map((row) => row.values)
-})
-
 const criteria = computed(() => dataStore.data?.criteria ?? [])
 const criterionNames = computed(() => criteria.value.map((c) => c.name))
 const weights = ref<number[]>([])
@@ -90,29 +85,20 @@ const weightsSum = computed(() => {
 })
 
 async function handleEqualWeights() {
-  console.log('equalWeights clicked', dataMatrix.value)
-  if (dataMatrix.value.length > 0) {
-    const request: WeightsRequest = { matrix: dataMatrix.value }
+  if (configStore.dataMatrix?.length > 0) {
+    const request: WeightsRequest = { matrix: configStore.dataMatrix! }
     const equalWeights = await getEqualWeights(request)
     weights.value = equalWeights.weights
-    console.log('equalWeights', equalWeights)
   }
 }
 
 async function handleEntropyWeights() {
-  console.log('entropyWeights clicked', dataMatrix.value)
-  if (dataMatrix.value.length > 0) {
-    const request: WeightsRequest = { matrix: dataMatrix.value }
+  if (configStore.dataMatrix?.length > 0) {
+    const request: WeightsRequest = { matrix: configStore.dataMatrix! }
     const entropyWeights = await getEntropyWeights(request)
     weights.value = entropyWeights.weights
-    console.log('entropyWeights', entropyWeights)
   }
 }
-
-watch(tableData, (newValue) => {
-  console.log('new table data')
-  console.log(newValue)
-})
 
 watch(
   criterionNames,
@@ -123,8 +109,6 @@ watch(
     } else {
       weights.value = new Array(newValue.length).fill(0)
     }
-    console.log('ciritera', newValue)
-    console.log('weights', weights.value)
   },
   { immediate: true },
 )
@@ -133,19 +117,9 @@ watch(
   weights,
   (newValue) => {
     if (newValue.length > 0) {
-      console.log('Wagi się zmieniły, wysyłam do store:', newValue)
       configStore.setWeights([...newValue])
     }
   },
   { deep: true },
-)
-
-watch(
-  dataMatrix,
-  (newValue) => {
-    console.log('Macierz się zmieniła:', newValue)
-    configStore.setDataMatrix(newValue)
-  },
-  { immediate: true },
 )
 </script>

@@ -57,6 +57,7 @@ export const useConfigStore = defineStore('config', () => {
     methodsConfig,
     setMethodsConfig,
     clearMethodsConfig,
+    dataMatrix,
     setDataMatrix,
     clearDataMatrix,
     clearConfig,

@@ -45,9 +45,14 @@ async function processFile(file: File) {
     }
     if (!result) return
     dataStore.setData(result)
-    if (resultsStore.results) resultsStore.clearResults()
-    if (configStore.methodList || configStore.weights || configStore.methodsConfig)
+    if (resultsStore.results) {
+      resultsStore.clearResults()
+    }
+    if (configStore.methodList || configStore.weights || configStore.methodsConfig) {
       configStore.clearConfig()
+    }
+    const dataMatrix = result.dataset.map((row) => row.values)
+    configStore.setDataMatrix(dataMatrix)
   } catch (error) {
     console.error('Error parsing file:', error)
   }
