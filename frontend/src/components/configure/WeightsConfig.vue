@@ -28,6 +28,21 @@
         </template>
       </Column>
     </DataTable>
+    <div class="flex justify-between items-center mt-2">
+      <div class="flex gap-2 font-bold">
+        <Button @click="handleEqualWeights" class="bg-primary border-primary hover:brightness-110"
+          >Equal Weights</Button
+        >
+        <Button @click="handleEntropyWeights" class="bg-primary border-primary hover:brightness-110"
+          >Entropy Weights</Button
+        >
+      </div>
+      <div class="border border-surface-200 dark:border-surface-700 rounded-lg p-2 font-bold">
+        <span :class="weightsSum !== 1 ? 'text-red-600' : 'text-green-500'"
+          >Sum: {{ weightsSum }}</span
+        >
+      </div>
+    </div>
   </div>
 </template>
 
@@ -35,11 +50,14 @@
 import { useDataStore } from '@/stores/dataStore'
 import { useConfigStore } from '@/stores/configStore'
 import { computed, ref, watch } from 'vue'
-import type { TableRow } from '@/types'
+import type { TableRow, WeightsRequest } from '@/types'
 
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import InputNumber from 'primevue/inputnumber'
+import Button from 'primevue/button'
+
+import { getEntropyWeights, getEqualWeights } from '@/services/api'
 
 const dataStore = useDataStore()
 const configStore = useConfigStore()
@@ -67,8 +85,29 @@ const tableData = computed(() => {
 })
 
 const weightsSum = computed(() => {
-  return weights.value.reduce((acc, val) => acc + (val || 0), 0)
+  const sum = weights.value.reduce((acc, val) => acc + (val || 0), 0)
+  return parseFloat(sum.toFixed(10))
 })
+
+async function handleEqualWeights() {
+  console.log('equalWeights clicked', dataMatrix.value)
+  if (dataMatrix.value.length > 0) {
+    const request: WeightsRequest = { matrix: dataMatrix.value }
+    const equalWeights = await getEqualWeights(request)
+    weights.value = equalWeights.weights
+    console.log('equalWeights', equalWeights)
+  }
+}
+
+async function handleEntropyWeights() {
+  console.log('entropyWeights clicked', dataMatrix.value)
+  if (dataMatrix.value.length > 0) {
+    const request: WeightsRequest = { matrix: dataMatrix.value }
+    const entropyWeights = await getEntropyWeights(request)
+    weights.value = entropyWeights.weights
+    console.log('entropyWeights', entropyWeights)
+  }
+}
 
 watch(tableData, (newValue) => {
   console.log('new table data')

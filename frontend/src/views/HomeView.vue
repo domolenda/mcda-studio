@@ -7,11 +7,14 @@
     <RouterLink :to="{ name: 'data' }" class="mt-8">
       <Button
         size="large"
-        rounded
-        class="px-8 py-4 text-lg font-bold shadow-lg bg-emerald-500 text-white border-emerald-500 hover:shadow-primary-600 hover:brightness-110 transition-all cursor-pointer rounded-2xl"
+        class="px-8 py-4 text-lg font-bold shadow-lg bg-emerald-500 text-white border-emerald-500 hover:shadow-primary-600 hover:brightness-110 transition-all"
       >
         Get Started
       </Button>
     </RouterLink>
   </div>
 </template>
+
+<script setup lang="ts">
+import Button from 'primevue/button'
+</script>
