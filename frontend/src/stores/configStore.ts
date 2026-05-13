@@ -6,6 +6,7 @@ export const useConfigStore = defineStore('config', () => {
   const methodList = ref<string[] | null>(null)
   const weights = ref<number[] | null>(null)
   const methodsConfig = ref<ConfigData[] | null>(null)
+  const dataMatrix = ref<number[][] | null>(null)
 
   function setMethodList(newMethodList: string[]) {
     methodList.value = newMethodList
@@ -31,10 +32,19 @@ export const useConfigStore = defineStore('config', () => {
     methodsConfig.value = null
   }
 
+  function setDataMatrix(newDataMatrix: number[][]) {
+    dataMatrix.value = newDataMatrix
+  }
+
+  function clearDataMatrix() {
+    dataMatrix.value = null
+  }
+
   function clearConfig() {
     clearMethodList()
     clearWeights()
     clearMethodsConfig()
+    clearDataMatrix()
   }
 
   return {
@@ -47,6 +57,8 @@ export const useConfigStore = defineStore('config', () => {
     methodsConfig,
     setMethodsConfig,
     clearMethodsConfig,
+    setDataMatrix,
+    clearDataMatrix,
     clearConfig,
   }
 })

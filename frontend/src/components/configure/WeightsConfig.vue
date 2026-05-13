@@ -1,0 +1,112 @@
+<template>
+  <div class="card p-6" v-if="tableData">
+    <DataTable
+      :value="tableData"
+      :showHeader="false"
+      :pt="{
+        thead: { class: 'hidden' },
+      }"
+      tableStyle="min-width: 100%"
+      class="border border-surface-200 dark:border-surface-700 rounded-lg overflow-hidden"
+    >
+      <Column field="type" class="font-bold"></Column>
+      <Column v-for="(name, idx) in criterionNames" :key="idx" :field="idx.toString()">
+        <template #body="slotProps">
+          <div v-if="slotProps.data.type === 'Weights'">
+            <InputNumber
+              v-model="weights[idx]"
+              :min="0"
+              :max="1"
+              :minFractionDigits="1"
+              :maxFractionDigits="20"
+              :allowEmpty="false"
+              mode="decimal"
+              inputClass="w-full text-center py-1 px-2 border rounded-md dark:bg-surface-900"
+            />
+          </div>
+          <div v-else>{{ slotProps.data[idx.toString()] }}</div>
+        </template>
+      </Column>
+    </DataTable>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useDataStore } from '@/stores/dataStore'
+import { useConfigStore } from '@/stores/configStore'
+import { computed, ref, watch } from 'vue'
+import type { TableRow } from '@/types'
+
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import InputNumber from 'primevue/inputnumber'
+
+const dataStore = useDataStore()
+const configStore = useConfigStore()
+
+const dataSet = computed(() => dataStore.data?.dataset ?? [])
+const dataMatrix = computed((): number[][] => {
+  return dataSet.value.map((row) => row.values)
+})
+
+const criteria = computed(() => dataStore.data?.criteria ?? [])
+const criterionNames = computed(() => criteria.value.map((c) => c.name))
+const weights = ref<number[]>([])
+
+const tableData = computed(() => {
+  const namesRow: TableRow = { type: 'Criteria' }
+  const weightsRow: TableRow = { type: 'Weights' }
+
+  criterionNames.value.forEach((name, i) => {
+    const key = i.toString()
+    namesRow[key] = name
+    weightsRow[key] = 0
+  })
+
+  return [namesRow, weightsRow]
+})
+
+const weightsSum = computed(() => {
+  return weights.value.reduce((acc, val) => acc + (val || 0), 0)
+})
+
+watch(tableData, (newValue) => {
+  console.log('new table data')
+  console.log(newValue)
+})
+
+watch(
+  criterionNames,
+  (newValue) => {
+    const savedWeights = configStore.weights
+    if (savedWeights && savedWeights.length === newValue.length) {
+      weights.value = [...savedWeights]
+    } else {
+      weights.value = new Array(newValue.length).fill(0)
+    }
+    console.log('ciritera', newValue)
+    console.log('weights', weights.value)
+  },
+  { immediate: true },
+)
+
+watch(
+  weights,
+  (newValue) => {
+    if (newValue.length > 0) {
+      console.log('Wagi się zmieniły, wysyłam do store:', newValue)
+      configStore.setWeights([...newValue])
+    }
+  },
+  { deep: true },
+)
+
+watch(
+  dataMatrix,
+  (newValue) => {
+    console.log('Macierz się zmieniła:', newValue)
+    configStore.setDataMatrix(newValue)
+  },
+  { immediate: true },
+)
+</script>

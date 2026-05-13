@@ -108,3 +108,8 @@ export interface WeightsResponse {
 export interface ProcessedProjectData extends ProjectData {
   alternativeKey: string
 }
+
+export interface TableRow {
+  type: string
+  [key: string]: string | number
+}
