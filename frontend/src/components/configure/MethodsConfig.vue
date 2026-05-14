@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center mt-2">
     <div
-      class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 font-bold flex flex-col gap-2 w-fit"
+      class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 font-bold flex flex-col gap-2 w-fit bg-white dark:bg-surface-900"
     >
       <span>Number of methods</span>
       <Select
@@ -19,9 +19,9 @@
       <div
         v-for="block in methodBlocks"
         :key="block.id"
-        class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 font-bold flex flex-col gap-2 w-fit"
+        class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 font-bold flex flex-col gap-2 w-64 bg-white dark:bg-surface-900"
       >
-        <span>Method {{ block.id + 1 }}</span>
+        <span class="justify-center flex">Method {{ block.id + 1 }}</span>
         <Select
           v-model="block.selectedMethod"
           :options="methodNames"
@@ -96,7 +96,6 @@ function handleMethodCountChange() {
     selectedMethod: null,
     selectedNormalization: null,
   }))
-  console.log(rankingMethods.value)
 }
 
 function handleMethodChange(block: {

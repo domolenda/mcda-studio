@@ -21,6 +21,7 @@
 <script setup lang="ts">
 import { useTheme } from '@/composables/useTheme'
 import { useRouter } from 'vue-router'
+import Button from 'primevue/button'
 
 const { isDark, toggleTheme } = useTheme()
 

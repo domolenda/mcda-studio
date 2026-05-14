@@ -37,7 +37,9 @@
           >Entropy Weights</Button
         >
       </div>
-      <div class="border border-surface-200 dark:border-surface-700 rounded-lg p-2 font-bold">
+      <div
+        class="border border-surface-200 dark:border-surface-700 rounded-lg p-2 font-bold bg-white dark:bg-surface-900"
+      >
         <span :class="weightsSum !== 1 ? 'text-red-600' : 'text-green-500'"
           >Sum: {{ weightsSum }}</span
         >
