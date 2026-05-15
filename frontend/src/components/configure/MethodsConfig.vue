@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center mt-2">
+  <div class="flex justify-center mt-4">
     <div
       class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 font-bold flex flex-col gap-2 w-fit bg-white dark:bg-surface-900"
     >
@@ -14,7 +14,7 @@
     </div>
   </div>
 
-  <div class="flex justify-center mt-2" v-if="methodBlocks">
+  <div class="flex justify-center mt-4" v-if="methodBlocks">
     <div class="flex flex-wrap gap-4">
       <div
         v-for="block in methodBlocks"

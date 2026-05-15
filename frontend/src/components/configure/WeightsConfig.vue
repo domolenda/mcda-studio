@@ -28,14 +28,18 @@
         </template>
       </Column>
     </DataTable>
-    <div class="flex justify-between items-center mt-2">
+    <div class="flex justify-between items-center mt-4">
       <div class="flex gap-2 font-bold">
-        <Button @click="handleEqualWeights" class="bg-primary border-primary hover:brightness-110"
-          >Equal Weights</Button
-        >
-        <Button @click="handleEntropyWeights" class="bg-primary border-primary hover:brightness-110"
-          >Entropy Weights</Button
-        >
+        <Button
+          label="Equal Weights"
+          @click="handleEqualWeights"
+          class="bg-primary border-primary hover:brightness-110"
+        />
+        <Button
+          label="Entropy Weights"
+          @click="handleEntropyWeights"
+          class="bg-primary border-primary hover:brightness-110"
+        />
       </div>
       <div
         class="border border-surface-200 dark:border-surface-700 rounded-lg p-2 font-bold bg-white dark:bg-surface-900"
