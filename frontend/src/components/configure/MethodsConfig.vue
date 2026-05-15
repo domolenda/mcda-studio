@@ -185,7 +185,13 @@ onMounted(async () => {
       selectedMethod: config.name,
       selectedNormalization:
         config.params.find((p) => p.name === 'normalization_method')?.value ?? '',
-      parameters: config.params.filter((p) => p.name !== 'normalization_method'),
+      parameters: (rankingMethods.value.find((m) => m.id === config.name)?.parameters ?? []).map(
+        (p) => ({
+          ...p,
+          value: config.params.find((cp) => cp.name === p.name)?.value ?? p.default,
+          label: formatParamName(p.name),
+        }),
+      ),
     }))
   }
 })
