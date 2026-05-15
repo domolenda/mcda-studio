@@ -24,13 +24,15 @@
         <span class="justify-center flex">Method {{ block.id + 1 }}</span>
         <Select
           v-model="block.selectedMethod"
-          :options="methodNames"
+          :options="rankingMethods"
+          optionLabel="name"
+          optionValue="id"
           placeholder="Select..."
           class="w-full"
           @change="handleMethodChange(block)"
         />
         <div v-if="block.selectedMethod">
-          <div v-if="rankingMethods.find((m) => m.name === block.selectedMethod)">
+          <div v-if="rankingMethods.find((m) => m.id === block.selectedMethod)">
             <div v-if="block.selectedNormalization">
               <span>Normalization method</span>
               <Select
@@ -67,9 +69,8 @@
 <script setup lang="ts">
 import Select from 'primevue/select'
 import InputNumber from 'primevue/inputnumber'
-// import { useDataStore } from '@/stores/dataStore'
-// import { useConfigStore } from '@/stores/configStore'
-import { computed, ref, onMounted } from 'vue'
+import { useConfigStore } from '@/stores/configStore'
+import { computed, ref, watch, onMounted } from 'vue'
 
 import { getRankingMethods, getNormalizationMethods } from '@/services/api'
 import type {
@@ -81,6 +82,7 @@ import type {
 
 const rankingMethods = ref<RankingMethod[]>([])
 const normalizationMethods = ref<NormalizationMethod[]>([])
+const configStore = useConfigStore()
 
 const methodCountOptions = computed<number[]>(() => {
   return rankingMethods.value.map((_, i) => i + 1)
@@ -89,10 +91,6 @@ const selectedMethodCount = ref<number | null>(null)
 const methodBlocks = ref<
   { id: number; selectedMethod: string | null; selectedNormalization: string | null }[]
 >([])
-
-const methodNames = computed<string[]>(() => {
-  return rankingMethods.value.map((method) => method.name)
-})
 
 const fetchData = async () => {
   try {
@@ -112,6 +110,7 @@ function handleMethodCountChange() {
     selectedMethod: null,
     selectedNormalization: null,
   }))
+  configStore.setSelectedMethodCount(selectedMethodCount.value)
 }
 
 function handleMethodChange(block: {
@@ -121,13 +120,28 @@ function handleMethodChange(block: {
   parameters: Record<string, number>[]
 }) {
   if (block.selectedMethod === null) return
-  const method = rankingMethods.value.find((m) => m.name === block.selectedMethod)
+  const method = rankingMethods.value.find((m) => m.id === block.selectedMethod)
   block.selectedNormalization = method?.default_normalization ?? null
   block.parameters = (method?.parameters ?? []).map((p) => ({
     ...p,
     value: p.default,
     label: formatParamName(p.name),
   }))
+  const paramList = (method?.parameters ?? []).map((p) => ({
+    name: p.name,
+    value: p.default,
+  }))
+  if (block.selectedNormalization) {
+    paramList.push({
+      name: 'normalization_method',
+      value: block.selectedNormalization,
+    })
+  }
+  const ConfigBlock = {
+    name: block.selectedMethod,
+    params: paramList,
+  }
+  configStore.addMethodConfig(block.id, ConfigBlock)
 }
 
 function formatParamName(name: string): string {
@@ -135,7 +149,44 @@ function formatParamName(name: string): string {
   return cleaned.charAt(0).toUpperCase() + cleaned.slice(1)
 }
 
-onMounted(() => {
-  fetchData()
+watch(
+  methodBlocks,
+  (newConfig) => {
+    const mapedConfig = newConfig.map((newConfig) => {
+      const paramList = (newConfig.parameters ?? []).map((p) => ({
+        name: p.name,
+        value: p.value,
+      }))
+      if (newConfig.selectedNormalization) {
+        paramList.push({
+          name: 'normalization_method',
+          value: newConfig.selectedNormalization,
+        })
+      }
+      return {
+        name: newConfig.selectedMethod ?? '',
+        params: paramList,
+      }
+    })
+    configStore.setMethodsConfig(mapedConfig)
+  },
+  { deep: true },
+)
+
+onMounted(async () => {
+  await fetchData()
+  if (configStore.selectedMethodCount) {
+    selectedMethodCount.value = configStore.selectedMethodCount
+  }
+  if (configStore.methodsConfig && configStore.methodsConfig.length > 0) {
+    const mapedConfig = configStore.methodsConfig
+    methodBlocks.value = mapedConfig.map((config, idx) => ({
+      id: idx,
+      selectedMethod: config.name,
+      selectedNormalization:
+        config.params.find((p) => p.name === 'normalization_method')?.value ?? '',
+      parameters: config.params.filter((p) => p.name !== 'normalization_method'),
+    }))
+  }
 })
 </script>

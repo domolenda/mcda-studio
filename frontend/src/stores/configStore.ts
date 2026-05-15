@@ -3,19 +3,10 @@ import { ref } from 'vue'
 import { type ConfigData } from '@/types'
 
 export const useConfigStore = defineStore('config', () => {
-  const methodList = ref<string[] | null>(null)
   const weights = ref<number[] | null>(null)
-  const methodsConfig = ref<ConfigData[] | null>(null)
+  const methodsConfig = ref<ConfigData[]>([])
   const dataMatrix = ref<number[][] | null>(null)
   const selectedMethodCount = ref<number | null>(null)
-
-  function setMethodList(newMethodList: string[]) {
-    methodList.value = newMethodList
-  }
-
-  function clearMethodList() {
-    methodList.value = null
-  }
 
   function setWeights(newWeights: number[]) {
     weights.value = newWeights
@@ -30,7 +21,11 @@ export const useConfigStore = defineStore('config', () => {
   }
 
   function clearMethodsConfig() {
-    methodsConfig.value = null
+    methodsConfig.value = []
+  }
+
+  function addMethodConfig(id: number, config: ConfigData) {
+    methodsConfig.value[id] = config
   }
 
   function setDataMatrix(newDataMatrix: number[][]) {
@@ -50,7 +45,6 @@ export const useConfigStore = defineStore('config', () => {
   }
 
   function clearConfig() {
-    clearMethodList()
     clearWeights()
     clearMethodsConfig()
     clearDataMatrix()
@@ -58,15 +52,13 @@ export const useConfigStore = defineStore('config', () => {
   }
 
   return {
-    methodList,
-    setMethodList,
-    clearMethodList,
     weights,
     setWeights,
     clearWeights,
     methodsConfig,
     setMethodsConfig,
     clearMethodsConfig,
+    addMethodConfig,
     dataMatrix,
     setDataMatrix,
     clearDataMatrix,
