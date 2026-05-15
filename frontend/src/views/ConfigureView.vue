@@ -20,8 +20,11 @@ import WeightsConfig from '@/components/configure/WeightsConfig.vue'
 import MethodsConfig from '@/components/configure/MethodsConfig.vue'
 import Button from 'primevue/button'
 
+import { useRouter } from 'vue-router'
+
 import { useDataStore } from '@/stores/dataStore'
 import { useConfigStore } from '@/stores/configStore'
+import { useResultsStore } from '@/stores/resultsStore'
 
 import { rankTopsis, rankWaspas, rankVikor, getComparisonResults } from '@/services/api'
 import type {
@@ -36,6 +39,8 @@ import type {
 
 const dataStore = useDataStore()
 const configStore = useConfigStore()
+const resultsStore = useResultsStore()
+const router = useRouter()
 
 async function runAnalysis() {
   if (dataStore.data === null) return
@@ -80,12 +85,22 @@ async function runAnalysis() {
         result = await rankVikor(vikorRequest)
         break
     }
+    if (result) {
+      const mappedResult: MultipleResultData = {
+        rankings: { [method.name]: result.ranking },
+        correlations: [],
+      }
+      resultsStore.setResults(mappedResult)
+      router.push({ name: 'results' })
+    }
   } else if (configStore.selectedMethodCount > 1) {
     const comparisonRequest: ComparisonRequest = {
       ...request,
       methods_config: configStore.methodsConfig,
     }
     const resultComparison: MultipleResultData = await getComparisonResults(comparisonRequest)
+    resultsStore.setResults(resultComparison)
+    router.push({ name: 'results' })
   }
 }
 </script>
