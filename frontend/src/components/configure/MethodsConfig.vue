@@ -42,6 +42,21 @@
                 class="w-full"
               />
             </div>
+            <div v-if="block.parameters">
+              <div v-for="param in block.parameters" :key="param.id">
+                <span>{{ param.label }}</span>
+                <InputNumber
+                  v-model="param.value"
+                  :min="param.min"
+                  :max="param.max"
+                  :minFractionDigits="1"
+                  :maxFractionDigits="20"
+                  :allowEmpty="false"
+                  mode="decimal"
+                  inputClass="w-full text-center py-1 px-2 border rounded-md dark:bg-surface-900"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -51,6 +66,7 @@
 
 <script setup lang="ts">
 import Select from 'primevue/select'
+import InputNumber from 'primevue/inputnumber'
 // import { useDataStore } from '@/stores/dataStore'
 // import { useConfigStore } from '@/stores/configStore'
 import { computed, ref, onMounted } from 'vue'
@@ -102,10 +118,21 @@ function handleMethodChange(block: {
   id: number
   selectedMethod: string | null
   selectedNormalization: string | null
+  parameters: Record<string, number>[]
 }) {
   if (block.selectedMethod === null) return
   const method = rankingMethods.value.find((m) => m.name === block.selectedMethod)
   block.selectedNormalization = method?.default_normalization ?? null
+  block.parameters = (method?.parameters ?? []).map((p) => ({
+    ...p,
+    value: p.default,
+    label: formatParamName(p.name),
+  }))
+}
+
+function formatParamName(name: string): string {
+  const cleaned = name.endsWith('_') ? name.slice(0, -1) : name
+  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1)
 }
 
 onMounted(() => {
