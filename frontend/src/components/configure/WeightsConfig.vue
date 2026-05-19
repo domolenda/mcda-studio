@@ -3,6 +3,7 @@
     <DataTable
       :value="tableData"
       :showHeader="false"
+      stripedRows
       :pt="{
         thead: { class: 'hidden' },
       }"
