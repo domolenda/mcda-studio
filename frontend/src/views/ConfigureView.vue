@@ -50,7 +50,7 @@ function validateConfig(): boolean {
     toast.add({
       severity: 'error',
       summary: 'Error',
-      detail: 'Please set weights first',
+      detail: 'Please set weights first.',
       life: 3000,
     })
     return false
@@ -61,7 +61,7 @@ function validateConfig(): boolean {
     toast.add({
       severity: 'error',
       summary: 'Error',
-      detail: 'Weights must sum to 1',
+      detail: 'Weights must sum to 1.',
       life: 3000,
     })
     return false
@@ -71,7 +71,7 @@ function validateConfig(): boolean {
     toast.add({
       severity: 'error',
       summary: 'Error',
-      detail: 'Please select number of methods for analysis',
+      detail: 'Please select number of methods for analysis.',
       life: 3000,
     })
     return false
@@ -81,7 +81,7 @@ function validateConfig(): boolean {
     toast.add({
       severity: 'error',
       summary: 'Error',
-      detail: 'Please configure methods for analysis',
+      detail: 'Please configure methods for analysis.',
       life: 3000,
     })
     return false

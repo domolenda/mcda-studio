@@ -16,10 +16,12 @@ import { parseCSV, parseExcel, processCSVResult, processExcelResult } from '@/ut
 import { useDataStore } from '@/stores/dataStore'
 import { useConfigStore } from '@/stores/configStore'
 import { useResultsStore } from '@/stores/resultsStore'
+import { useToast } from 'primevue/usetoast'
 
 const dataStore = useDataStore()
 const configStore = useConfigStore()
 const resultsStore = useResultsStore()
+const toast = useToast()
 
 const CSV_EXTENSIONS = ['.csv', '.txt']
 const EXCEL_EXTENSIONS = ['.xlsx', '.xls']
@@ -43,7 +45,15 @@ async function processFile(file: File) {
       result = await parseExcel(file)
       result = processExcelResult(result)
     }
-    if (!result) return
+    if (!result) {
+      toast.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Unsupported file format. Please use CSV, TXT, XLSX or XLS.',
+        life: 3000,
+      })
+      return
+    }
     dataStore.setData(result)
     if (resultsStore.results) {
       resultsStore.clearResults()
@@ -53,8 +63,13 @@ async function processFile(file: File) {
     }
     const dataMatrix = result.dataset.map((row) => row.values)
     configStore.setDataMatrix(dataMatrix)
-  } catch (error) {
-    console.error('Error parsing file:', error)
+  } catch {
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Failed to parse file. Check if the file structure is correct.',
+      life: 3000,
+    })
   }
 }
 </script>
