@@ -5,6 +5,11 @@
     >
       <RankingTable />
     </div>
+    <div v-if="resultsStore.results.correlations.length > 0" class="mt-4 p-4">
+      <div class="flex flex-wrap gap-4 justify-center">
+        <CorrelationScatter />
+      </div>
+    </div>
   </div>
   <div v-else class="text-center p-8 text-surface-500">
     No data available. Please run analysis first.
@@ -16,6 +21,7 @@ import { useDataStore } from '@/stores/dataStore'
 import { useResultsStore } from '@/stores/resultsStore'
 
 import RankingTable from '@/components/results/RankingTable.vue'
+import CorrelationScatter from '@/components/results/CorrelationScatter.vue'
 
 const dataStore = useDataStore()
 const resultsStore = useResultsStore()
