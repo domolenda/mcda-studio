@@ -5,7 +5,29 @@
       :key="i"
       class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 bg-white dark:bg-surface-900 w-[420px]"
     >
-      <Scatter :data="correlation.chartData" :options="correlation.chartOptions" />
+      <Scatter
+        :ref="
+          (el) => {
+            if (el) chartRefs[i] = el
+          }
+        "
+        :data="correlation.chartData"
+        :options="correlation.chartOptions"
+      />
+      <div class="flex justify-center mt-2">
+        <Button
+          label="Save as PNG"
+          size="small"
+          @click="
+            saveChart(
+              chartRefs[i].chart,
+              `correlation_${correlation.chartOptions.scales.x.title.text}_${correlation.chartOptions.scales.y.title.text}`,
+              isDark,
+            )
+          "
+          class="bg-primary border-primary hover:brightness-110"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -13,7 +35,9 @@
 <script setup lang="ts">
 import { useResultsStore } from '@/stores/resultsStore'
 import { useTheme } from '@/composables/useTheme'
+import { saveChart } from '@/utils/chartExport'
 
+import Button from 'primevue/button'
 import { Scatter } from 'vue-chartjs'
 import {
   Chart as ChartJS,
@@ -25,10 +49,11 @@ import {
   Title,
 } from 'chart.js'
 
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const resultsStore = useResultsStore()
 const { isDark } = useTheme()
+const chartRefs = ref([])
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend, Title)
 
@@ -50,6 +75,7 @@ const correlationsData = computed(
               borderDash: [10, 5],
               pointRadius: 0,
               borderWidth: 2,
+              pointStyle: 'line',
               data: [
                 { x: 1, y: 1 },
                 { x: rankings_a.length, y: rankings_a.length },
@@ -63,6 +89,7 @@ const correlationsData = computed(
           ],
         },
         chartOptions: {
+          devicePixelRatio: 3,
           aspectRatio: 1,
           plugins: {
             title: {
@@ -74,7 +101,7 @@ const correlationsData = computed(
             legend: {
               labels: {
                 color: textColor,
-                filter: (item) => item.text !== 'perfect correlation',
+                usePointStyle: true,
               },
             },
           },
