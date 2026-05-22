@@ -1,5 +1,8 @@
 <template>
   <div v-if="dataStore.data && resultsStore.results" class="p-4 mx-auto">
+    <div class="text-center p-8 text-surface-500">
+      <TopRankingChart />
+    </div>
     <div
       class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 bg-white dark:bg-surface-900"
     >
@@ -22,6 +25,7 @@ import { useResultsStore } from '@/stores/resultsStore'
 
 import RankingTable from '@/components/results/RankingTable.vue'
 import CorrelationScatter from '@/components/results/CorrelationScatter.vue'
+import TopRankingChart from '@/components/results/TopRankingChart.vue'
 
 const dataStore = useDataStore()
 const resultsStore = useResultsStore()
