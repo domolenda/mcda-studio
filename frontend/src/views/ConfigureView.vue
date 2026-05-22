@@ -86,6 +86,18 @@ function validateConfig(): boolean {
     })
     return false
   }
+  const methodNames = configStore.methodsConfig.map((m) => m.name)
+  const uniqueNames = new Set(methodNames)
+  if (methodNames.length !== uniqueNames.size) {
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Selected MCDA methods must be unique.',
+      life: 3000,
+    })
+    return false
+  }
+
   return true
 }
 
