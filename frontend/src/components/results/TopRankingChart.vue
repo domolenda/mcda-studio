@@ -121,8 +121,17 @@ const chartsData = computed(() => {
           grid: { color: gridColor },
         },
         y: {
-          ticks: { display: false },
+          ticks: {
+            color: textColor,
+            callback: (value) => {
+              if (value === 3) return '1st'
+              if (value === 2) return '2nd'
+              if (value === 1) return '3rd'
+              return ''
+            },
+          },
           grid: { color: gridColor },
+          grace: 1,
         },
       },
     },

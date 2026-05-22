@@ -6,7 +6,7 @@ import Toast from 'primevue/toast'
 <template>
   <Toast />
   <AppNavbar />
-  <div class="min-h-screen bg-surface-100 dark:bg-surface-900">
+  <div class="min-h-screen bg-surface-100 dark:bg-surface-950">
     <RouterView />
   </div>
 </template>
