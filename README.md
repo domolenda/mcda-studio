@@ -2,7 +2,7 @@
 
 ## PL
 
-MCDA-studio to aplikacja webowa do analizy wielokryterialnej (MCDA/MCDM). 
+MCDA-studio to aplikacja webowa do analizy wielokryterialnej (MCDA/MCDM).  
 Do głównych funkcjonalności należą:
 
 - Import danych
@@ -12,7 +12,7 @@ Do głównych funkcjonalności należą:
 
 ## EN
 
-MCDA-studio is a web application for multi-criteria decision analysis (MCDA/MCDM). 
+MCDA-studio is a web application for multi-criteria decision analysis (MCDA/MCDM).  
 Its main features include:
 
 - Data import
