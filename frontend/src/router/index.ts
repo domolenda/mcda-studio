@@ -33,12 +33,12 @@ const router = createRouter({
     //   component: () => import('@/views/HowToView.vue'),
     //   meta: { title: 'How to Use', showInMenu: true },
     // },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   component: () => import('@/views/AboutView.vue'),
-    //   meta: { title: 'About', showInMenu: true },
-    // },
+    {
+      path: '/about',
+      name: 'about',
+      component: () => import('@/views/AboutView.vue'),
+      meta: { title: 'About', showInMenu: true },
+    },
   ],
 })
 
