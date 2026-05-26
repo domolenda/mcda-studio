@@ -20,6 +20,14 @@ Its main features include:
 - Ranking generation
 - Visualization and comparison of results
 
+## Demo
+
+### General usage
+![General usage](./media/use_example.gif)
+
+### State snapshot usage
+![State snapshot](./media/save_load_example.gif)
+
 ## Repository Structure
 
 The repository is structured as follows:
