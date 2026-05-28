@@ -11,6 +11,10 @@ on:
 jobs:
   test-backend:
     runs-on: ubuntu-latest
+    env:
+      APP_TITLE: MCDA Studio
+      APP_VERSION: 0.1.0
+      FRONTEND_ORIGIN: http://127.0.0.1:5173
     steps:
       - uses: actions/checkout@v4
       - name: Install uv
