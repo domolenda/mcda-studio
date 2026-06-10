@@ -38,6 +38,15 @@ mcda-studio/
 └── examples/   # Example datasets
 ```
 
+## Quick Start
+
+To run the full application using Docker:
+
+```bash
+docker-compose up --build
+```
+Frontend will be available at `http://localhost:5173`, backend at `http://localhost:8000` and documentation at `http://localhost:8000/docs`.
+
 ## Setup Instructions
 
 ### Frontend
