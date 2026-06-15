@@ -9,7 +9,7 @@ RANKING_METADATA: list[dict[str, Any]] = [
         "id": "topsis",
         "name": "TOPSIS",
         "normalization": True,
-        "default_normalization": "min_max",
+        "default_normalization": "vector",
         "parameters": [],
     },
     {
