@@ -4,9 +4,6 @@ from app.services.normalization.base import BaseNormalization
 
 
 class MinMaxNormalization(BaseNormalization):
-    def __init__(self, matrix: np.ndarray, types: np.ndarray):
-        super().__init__(matrix, types)
-
     def normalize(self) -> np.ndarray:
         matrix_mask = self._create_types_mask()
 
