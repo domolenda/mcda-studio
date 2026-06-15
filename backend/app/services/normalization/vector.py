@@ -3,16 +3,13 @@ import numpy as np
 from app.services.normalization.base import BaseNormalization
 
 
-class LinearNormalization(BaseNormalization):
+class VectorNormalization(BaseNormalization):
     def normalize(self) -> np.ndarray:
         matrix_mask = self._create_types_mask()
 
-        matrix_min = np.min(self.matrix, axis=0)
-        matrix_max = np.max(self.matrix, axis=0)
-
         norm_matrix = np.where(
             matrix_mask > 0,
-            (self.matrix) / (matrix_max),
-            (matrix_min) / (self.matrix),
+            self.matrix / np.sqrt(np.sum(self.matrix**2, axis=0)),
+            1 - (self.matrix / np.sqrt(np.sum(self.matrix**2, axis=0))),
         )
         return norm_matrix

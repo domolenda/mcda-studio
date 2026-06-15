@@ -2,10 +2,12 @@ from typing import Any
 
 from app.services.normalization.linear import LinearNormalization
 from app.services.normalization.min_max import MinMaxNormalization
+from app.services.normalization.vector import VectorNormalization
 
 NORMALIZATION_REGISTRY: dict[str, Any] = {
     "min_max": MinMaxNormalization,
     "linear": LinearNormalization,
+    "vector": VectorNormalization,
 }
 
 NORMALIZATION_METADATA: list[dict[str, Any]] = [
@@ -16,6 +18,10 @@ NORMALIZATION_METADATA: list[dict[str, Any]] = [
     {
         "id": "linear",
         "name": "Linear",
+    },
+    {
+        "id": "vector",
+        "name": "Vector",
     },
 ]
 
