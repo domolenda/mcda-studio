@@ -8,7 +8,7 @@ def test_topsis_rank(monitor_data):
     result = topsis.rank(
         monitor_data["matrix"], monitor_data["weights"], monitor_data["types"]
     )
-    assert result == [9, 2, 1, 3, 8, 6, 7, 4, 5]
+    assert result == [7, 3, 2, 1, 5, 4, 6, 8, 9]
 
 
 def test_topsis_invalid_weights(monitor_data):

@@ -15,7 +15,7 @@ def test_topsis_endpoint(monitor_data):
         },
     )
     assert response.status_code == 200
-    assert response.json()["ranking"] == [9, 2, 1, 3, 8, 6, 7, 4, 5]
+    assert response.json()["ranking"] == [7, 3, 2, 1, 5, 4, 6, 8, 9]
 
 
 def test_topsis_invalid_weights_sum_endpoint(monitor_data):

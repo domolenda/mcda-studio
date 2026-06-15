@@ -18,7 +18,7 @@ class RankingRequest(BaseModel):
                     ],
                     "types": [1, 1, -1],
                     "weights": [0.4, 0.35, 0.25],
-                    "normalization_method": "min_max",
+                    "normalization_method": "vector",
                 }
             ]
         }

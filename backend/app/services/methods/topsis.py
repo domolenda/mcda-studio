@@ -31,7 +31,7 @@ class TOPSIS(BaseMCDA):
         types: list[int],
         normalization_method: str | None = None,
     ) -> list[int]:
-        method = normalization_method or "min_max"
+        method = normalization_method or "vector"
         np_matrix, np_weights, np_types = self._validate(matrix, weights, types)
 
         normalization = get_normalization(method)
