@@ -44,6 +44,7 @@ import {
   LinearScale,
   PointElement,
   LineElement,
+  LineController,
   Tooltip,
   Legend,
   Title,
@@ -55,7 +56,7 @@ const resultsStore = useResultsStore()
 const { isDark } = useTheme()
 const chartRefs = ref([])
 
-ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend, Title)
+ChartJS.register(LinearScale, PointElement, LineElement, LineController, Tooltip, Legend, Title)
 
 const correlationsData = computed(
   () =>
