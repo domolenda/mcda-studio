@@ -1,6 +1,6 @@
 import type { Chart } from 'chart.js'
 
-export function saveChart(chart: Chart, fileName: string, isDark: boolean) {
+export function saveChart(chart: Chart, fileName: string) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const options = chart.options as any
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

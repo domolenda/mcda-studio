@@ -114,7 +114,7 @@ watch(
     if (savedWeights && savedWeights.length === newValue.length) {
       weights.value = [...savedWeights]
     } else {
-      weights.value = new Array(newValue.length).fill(0)
+      weights.value = Array.from({ length: newValue.length }, () => 0)
     }
   },
   { immediate: true },
