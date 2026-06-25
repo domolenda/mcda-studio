@@ -13,118 +13,67 @@ import type {
 
 const BASE_URL = import.meta.env.VITE_API_URL
 
-export async function getRankingMethods() {
-  const response = await fetch(`${BASE_URL}/methods/ranking`)
+async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
 
   if (!response.ok) {
     throw new Error(`HTTP error: ${response.status}`)
   }
 
-  return response.json() as Promise<RankingMethodsResponse>
+  return response.json() as Promise<T>
+}
+
+export async function getRankingMethods() {
+  return fetchJson<RankingMethodsResponse>(`${BASE_URL}/methods/ranking`)
 }
 
 export async function getNormalizationMethods() {
-  const response = await fetch(`${BASE_URL}/methods/normalization`)
-
-  if (!response.ok) {
-    throw new Error(`HTTP error: ${response.status}`)
-  }
-
-  return response.json() as Promise<NormalizationMethodsResponse>
+  return fetchJson<NormalizationMethodsResponse>(`${BASE_URL}/methods/normalization`)
 }
 
 export async function rankTopsis(data: TOPSISRequest) {
-  const response = await fetch(`${BASE_URL}/ranking/topsis`, {
+  return fetchJson<SingleRankingResponse>(`${BASE_URL}/ranking/topsis`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(data),
   })
-
-  if (!response.ok) {
-    throw new Error(`HTTP error: ${response.status}`)
-  }
-
-  return response.json() as Promise<SingleRankingResponse>
 }
 
 export async function rankWaspas(data: WASPASRequest) {
-  const response = await fetch(`${BASE_URL}/ranking/waspas`, {
+  return fetchJson<SingleRankingResponse>(`${BASE_URL}/ranking/waspas`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(data),
   })
-
-  if (!response.ok) {
-    throw new Error(`HTTP error: ${response.status}`)
-  }
-
-  return response.json() as Promise<SingleRankingResponse>
 }
 
 export async function rankVikor(data: VIKORRequest) {
-  const response = await fetch(`${BASE_URL}/ranking/vikor`, {
+  return fetchJson<SingleRankingResponse>(`${BASE_URL}/ranking/vikor`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(data),
   })
-
-  if (!response.ok) {
-    throw new Error(`HTTP error: ${response.status}`)
-  }
-
-  return response.json() as Promise<SingleRankingResponse>
 }
 
 export async function getEqualWeights(data: WeightsRequest) {
-  const response = await fetch(`${BASE_URL}/weights/equal`, {
+  return fetchJson<WeightsResponse>(`${BASE_URL}/weights/equal`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(data),
   })
-
-  if (!response.ok) {
-    throw new Error(`HTTP error: ${response.status}`)
-  }
-
-  return response.json() as Promise<WeightsResponse>
 }
 
 export async function getEntropyWeights(data: WeightsRequest) {
-  const response = await fetch(`${BASE_URL}/weights/entropy`, {
+  return fetchJson<WeightsResponse>(`${BASE_URL}/weights/entropy`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(data),
   })
-
-  if (!response.ok) {
-    throw new Error(`HTTP error: ${response.status}`)
-  }
-
-  return response.json() as Promise<WeightsResponse>
 }
 
 export async function getComparisonResults(data: ComparisonRequest) {
-  const response = await fetch(`${BASE_URL}/comparison`, {
+  return fetchJson<MultipleResultData>(`${BASE_URL}/comparison`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(data),
   })
-
-  if (!response.ok) {
-    throw new Error(`HTTP error: ${response.status}`)
-  }
-
-  return response.json() as Promise<MultipleResultData>
 }
