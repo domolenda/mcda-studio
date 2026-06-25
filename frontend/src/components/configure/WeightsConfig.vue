@@ -11,7 +11,7 @@
       class="border border-surface-200 dark:border-surface-700 rounded-lg overflow-hidden"
     >
       <Column field="type" class="font-bold"></Column>
-      <Column v-for="(name, idx) in criterionNames" :key="idx" :field="idx.toString()">
+      <Column v-for="(_, idx) in criterionNames" :key="idx" :field="idx.toString()">
         <template #body="slotProps">
           <div v-if="slotProps.data.type === 'Weights'">
             <InputNumber
@@ -33,12 +33,12 @@
       <div class="flex gap-2 font-bold">
         <Button
           label="Equal Weights"
-          @click="handleEqualWeights"
+          @click="handleObjectiveWeights('equal')"
           class="bg-primary border-primary hover:brightness-110"
         />
         <Button
           label="Entropy Weights"
-          @click="handleEntropyWeights"
+          @click="handleObjectiveWeights('entropy')"
           class="bg-primary border-primary hover:brightness-110"
         />
       </div>
@@ -56,7 +56,8 @@
 <script setup lang="ts">
 import { useDataStore } from '@/stores/dataStore'
 import { useConfigStore } from '@/stores/configStore'
-import { computed, ref, watch } from 'vue'
+import { useToast } from 'primevue/usetoast'
+import { computed, watch } from 'vue'
 import type { TableRow, WeightsRequest } from '@/types'
 
 import DataTable from 'primevue/datatable'
@@ -68,10 +69,19 @@ import { getEntropyWeights, getEqualWeights } from '@/services/api'
 
 const dataStore = useDataStore()
 const configStore = useConfigStore()
+const toast = useToast()
 
 const criteria = computed(() => dataStore.data?.criteria ?? [])
 const criterionNames = computed(() => criteria.value.map((c) => c.name))
-const weights = ref<number[]>([])
+
+const weights = computed<number[]>({
+  get() {
+    return configStore.weights ?? createEmptyWeights()
+  },
+  set(value: number[]) {
+    configStore.setWeights(value)
+  },
+})
 
 const tableData = computed(() => {
   const namesRow: TableRow = { type: 'Criteria' }
@@ -91,20 +101,33 @@ const weightsSum = computed(() => {
   return parseFloat(sum.toFixed(10))
 })
 
-async function handleEqualWeights() {
-  if (configStore.dataMatrix?.length > 0) {
-    const request: WeightsRequest = { matrix: configStore.dataMatrix! }
-    const equalWeights = await getEqualWeights(request)
-    weights.value = equalWeights.weights
+async function handleObjectiveWeights(type: 'equal' | 'entropy') {
+  try {
+    if (!configStore.dataMatrix || configStore.dataMatrix.length === 0) {
+      throw new Error('Data matrix is empty')
+    }
+
+    const request: WeightsRequest = { matrix: configStore.dataMatrix }
+    const response =
+      type === 'equal' ? await getEqualWeights(request) : await getEntropyWeights(request)
+
+    if (!response.weights || response.weights.length === 0) {
+      throw new Error('No weights returned')
+    }
+    weights.value = response.weights
+  } catch (error) {
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: error instanceof Error ? error.message : 'Failed to generate weights.',
+      life: 3000,
+    })
+    return
   }
 }
 
-async function handleEntropyWeights() {
-  if (configStore.dataMatrix?.length > 0) {
-    const request: WeightsRequest = { matrix: configStore.dataMatrix! }
-    const entropyWeights = await getEntropyWeights(request)
-    weights.value = entropyWeights.weights
-  }
+function createEmptyWeights() {
+  return Array.from({ length: criterionNames.value.length }, () => 0)
 }
 
 watch(
@@ -114,19 +137,9 @@ watch(
     if (savedWeights && savedWeights.length === newValue.length) {
       weights.value = [...savedWeights]
     } else {
-      weights.value = Array.from({ length: newValue.length }, () => 0)
+      weights.value = createEmptyWeights()
     }
   },
   { immediate: true },
-)
-
-watch(
-  weights,
-  (newValue) => {
-    if (newValue.length > 0) {
-      configStore.setWeights([...newValue])
-    }
-  },
-  { deep: true },
 )
 </script>
