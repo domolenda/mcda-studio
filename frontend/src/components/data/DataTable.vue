@@ -13,7 +13,7 @@
           <div class="flex flex-col gap-1">
             <span>{{ header }}</span>
             <Select
-              :modelValue="dataStore.data?.criteria[index].type"
+              :modelValue="dataStore.data?.criteria[index]?.type"
               @update:modelValue="dataStore.setCriterionType(index, $event)"
               :options="[
                 { label: 'Profit', value: 1 },

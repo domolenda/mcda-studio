@@ -58,7 +58,7 @@ async function processFile(file: File) {
     if (resultsStore.results) {
       resultsStore.clearResults()
     }
-    if (configStore.methodList || configStore.weights || configStore.methodsConfig) {
+    if (configStore.weights || configStore.methodsConfig.length > 0) {
       configStore.clearConfig()
     }
     const dataMatrix = result.dataset.map((row) => row.values)

@@ -8,12 +8,8 @@ export async function parseCSV(file: File): Promise<Papa.ParseResult<unknown>> {
       header: true,
       skipEmptyLines: true,
       dynamicTyping: true,
-      complete: (result) => {
-        resolve(result)
-      },
-      error: (error) => {
-        reject(error)
-      },
+      complete: resolve,
+      error: reject,
     })
   })
 }
@@ -33,42 +29,86 @@ export async function parseExcel(file: File): Promise<(string | number)[][]> {
   return data as (string | number)[][]
 }
 
+function isString(value: unknown): value is string {
+  return typeof value === 'string'
+}
+
+function isNumber(value: unknown): value is number {
+  return typeof value === 'number'
+}
+
+function buildProjectData(
+  dataset: { alternative: string; values: number[] }[],
+  criteriaKeys: string[],
+  alternativeKey: string,
+): ProcessedProjectData {
+  const criteria: Criterion[] = criteriaKeys.map((c) => ({ name: c, type: 1 }))
+  return { dataset, criteria, alternativeKey }
+}
+
 export function processCSVResult(result: Papa.ParseResult<unknown>): ProcessedProjectData {
   const fields = result.meta.fields ?? []
-  const alternativeKey: string | undefined = fields[0]
-  const criteriaKeys: string[] = fields.slice(1)
+  const alternativeKey = fields[0]
 
   if (!alternativeKey) {
     throw new Error('No alternative key found in CSV.')
   }
 
-  const dataset: Dataset = (result.data as Record<string, unknown>[]).map((row) => ({
-    alternative: row[alternativeKey] as string,
-    values: criteriaKeys.map((c) => row[c] as number),
-  }))
+  const criteriaKeys = fields.slice(1)
 
-  const criteria: Criterion[] = criteriaKeys.map((c) => ({ name: c, type: 1 as const }))
-  const processedProjectData: ProcessedProjectData = { dataset, criteria, alternativeKey }
+  const dataset: Dataset = (result.data as unknown[]).map((row, rowIndex) => {
+    if (typeof row !== 'object' || row === null) {
+      throw new Error(`Invalid CSV row at index ${rowIndex}`)
+    }
 
-  return processedProjectData
+    const record = row as Record<string, unknown>
+    const alternativeValue = record[alternativeKey]
+
+    if (!isString(alternativeValue)) {
+      throw new Error(`Alternative value is not a string for row ${rowIndex}`)
+    }
+
+    const values = criteriaKeys.map((key) => {
+      const cell = record[key]
+      if (!isNumber(cell)) {
+        throw new Error(`Criterion "${key}" is not numeric for row ${rowIndex}`)
+      }
+      return cell
+    })
+
+    return {
+      alternative: alternativeValue,
+      values: values,
+    }
+  })
+
+  return buildProjectData(dataset, criteriaKeys, alternativeKey)
 }
 
 export function processExcelResult(data: (string | number)[][]): ProcessedProjectData {
   const fields = data[0] as string[]
-  const criteriaKeys: string[] = fields.slice(1)
-  const alternativeKey = fields[0]
-
-  if (!alternativeKey) {
-    throw new Error('No alternative key found in Excel.')
+  if (!Array.isArray(fields) || fields.length === 0 || !isString(fields[0])) {
+    throw new Error('Invalid Excel header row.')
   }
 
-  const dataset: Dataset = data.slice(1).map((row) => ({
-    alternative: row[0] as string,
-    values: row.slice(1).map((v) => v as number),
-  }))
+  const alternativeKey = fields[0]
+  const criteriaKeys: string[] = fields.slice(1)
 
-  const criteria: Criterion[] = criteriaKeys.map((c) => ({ name: c, type: 1 }))
-  const processedProjectData: ProcessedProjectData = { dataset, criteria, alternativeKey }
+  const dataset: Dataset = data.slice(1).map((row, rowIndex) => {
+    if (!Array.isArray(row) || row.length < 1 || !isString(row[0])) {
+      throw new Error(`Invalid row ${rowIndex + 1} in Excel.`)
+    }
+    const values = row.slice(1).map((value, colIndex) => {
+      if (!isNumber(value)) {
+        throw new Error(`Invalid value in row ${rowIndex + 1}, column ${colIndex + 2}.`)
+      }
+      return value
+    })
+    return {
+      alternative: row[0],
+      values: values,
+    }
+  })
 
-  return processedProjectData
+  return buildProjectData(dataset, criteriaKeys, alternativeKey)
 }

@@ -45,7 +45,7 @@
               />
             </div>
             <div v-if="block.parameters">
-              <div v-for="param in block.parameters" :key="param.id">
+              <div v-for="param in block.parameters" :key="param.name">
                 <span>{{ param.label }}</span>
                 <InputNumber
                   v-model="param.value"
@@ -72,6 +72,7 @@ import InputNumber from 'primevue/inputnumber'
 import { useConfigStore } from '@/stores/configStore'
 import { computed, ref, watch, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
+import type { MethodBlock, ParamEntry } from '@/types'
 
 import { getRankingMethods, getNormalizationMethods } from '@/services/api'
 import type {
@@ -90,9 +91,7 @@ const methodCountOptions = computed<number[]>(() => {
   return rankingMethods.value.map((_, i) => i + 1)
 })
 const selectedMethodCount = ref<number | null>(null)
-const methodBlocks = ref<
-  { id: number; selectedMethod: string | null; selectedNormalization: string | null }[]
->([])
+const methodBlocks = ref<MethodBlock[]>([])
 
 const fetchData = async () => {
   try {
@@ -116,16 +115,12 @@ function handleMethodCountChange() {
     id: i,
     selectedMethod: null,
     selectedNormalization: null,
+    parameters: [],
   }))
   configStore.setSelectedMethodCount(selectedMethodCount.value)
 }
 
-function handleMethodChange(block: {
-  id: number
-  selectedMethod: string | null
-  selectedNormalization: string | null
-  parameters: Record<string, number>[]
-}) {
+function handleMethodChange(block: MethodBlock) {
   if (block.selectedMethod === null) return
   const method = rankingMethods.value.find((m) => m.id === block.selectedMethod)
   block.selectedNormalization = method?.default_normalization ?? null
@@ -134,7 +129,7 @@ function handleMethodChange(block: {
     value: p.default,
     label: formatParamName(p.name),
   }))
-  const paramList = (method?.parameters ?? []).map((p) => ({
+  const paramList: ParamEntry[] = (method?.parameters ?? []).map((p) => ({
     name: p.name,
     value: p.default,
   }))
@@ -160,7 +155,7 @@ watch(
   methodBlocks,
   (newConfig) => {
     const mapedConfig = newConfig.map((newConfig) => {
-      const paramList = (newConfig.parameters ?? []).map((p) => ({
+      const paramList: ParamEntry[] = (newConfig.parameters ?? []).map((p) => ({
         name: p.name,
         value: p.value,
       }))
@@ -190,12 +185,13 @@ onMounted(async () => {
     methodBlocks.value = mapedConfig.map((config, idx) => ({
       id: idx,
       selectedMethod: config.name,
-      selectedNormalization:
+      selectedNormalization: String(
         config.params.find((p) => p.name === 'normalization_method')?.value ?? '',
+      ),
       parameters: (rankingMethods.value.find((m) => m.id === config.name)?.parameters ?? []).map(
         (p) => ({
           ...p,
-          value: config.params.find((cp) => cp.name === p.name)?.value ?? p.default,
+          value: Number(config.params.find((cp) => cp.name === p.name)?.value ?? p.default),
           label: formatParamName(p.name),
         }),
       ),

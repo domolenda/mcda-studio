@@ -105,14 +105,15 @@ async function runAnalysis() {
   if (!validateConfig()) return
 
   const request: BaseRankingRequest = {
-    matrix: configStore.dataMatrix,
-    types: dataStore.data.criteria.map((c) => c.type),
-    weights: configStore.weights,
+    matrix: configStore.dataMatrix!,
+    types: dataStore.data!.criteria.map((c) => c.type),
+    weights: configStore.weights!,
   }
 
   try {
     if (configStore.selectedMethodCount === 1) {
       const method = configStore.methodsConfig[0]
+      if (!method) return
       let result: SingleRankingResponse | null = null
 
       switch (method.name) {
@@ -121,7 +122,7 @@ async function runAnalysis() {
             ...request,
             normalization_method: method.params.find(
               (param) => param.name === 'normalization_method',
-            )?.value,
+            )?.value as string | undefined,
           }
           result = await rankTopsis(topsisRequest)
           break
@@ -130,15 +131,17 @@ async function runAnalysis() {
             ...request,
             normalization_method: method.params.find(
               (param) => param.name === 'normalization_method',
-            )?.value,
-            lambda_: method.params.find((param) => param.name === 'lambda_')?.value,
+            )?.value as string | undefined,
+            lambda_: method.params.find((param) => param.name === 'lambda_')?.value as
+              | number
+              | undefined,
           }
           result = await rankWaspas(waspasRequest)
           break
         case 'vikor':
           const vikorRequest: VIKORRequest = {
             ...request,
-            v: method.params.find((param) => param.name === 'v')?.value,
+            v: method.params.find((param) => param.name === 'v')?.value as number | undefined,
           }
           result = await rankVikor(vikorRequest)
           break
@@ -151,7 +154,7 @@ async function runAnalysis() {
         resultsStore.setResults(mappedResult)
         router.push({ name: 'results' })
       }
-    } else if (configStore.selectedMethodCount > 1) {
+    } else if (configStore.selectedMethodCount! > 1) {
       const comparisonRequest: ComparisonRequest = {
         ...request,
         methods_config: configStore.methodsConfig,
