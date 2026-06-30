@@ -5,7 +5,12 @@
       :key="i"
       class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 bg-white dark:bg-surface-900 w-105"
     >
-      <Scatter ref="chartRefs" :data="correlation.chartData" :options="correlation.chartOptions" />
+      <Chart
+        type="scatter"
+        ref="chartRefs"
+        :data="correlation.chartData"
+        :options="correlation.chartOptions"
+      />
       <div class="flex justify-center mt-2">
         <Button
           label="Save as PNG"
@@ -29,10 +34,8 @@ import { useResultsStore } from '@/stores/resultsStore'
 import { useTheme } from '@/composables/useTheme'
 import { saveChart } from '@/utils/chartExport'
 
-import type { ChartData } from 'chart.js'
-
 import Button from 'primevue/button'
-import { Scatter } from 'vue-chartjs'
+import { Chart } from 'vue-chartjs'
 import {
   Chart as ChartJS,
   LinearScale,
@@ -48,7 +51,7 @@ import { computed, ref } from 'vue'
 
 const resultsStore = useResultsStore()
 const { isDark } = useTheme()
-const chartRefs = ref<Array<InstanceType<typeof Scatter> | null>>([])
+const chartRefs = ref<Array<InstanceType<typeof Chart> | null>>([])
 
 ChartJS.register(LinearScale, PointElement, LineElement, LineController, Tooltip, Legend, Title)
 
@@ -79,10 +82,10 @@ const correlationsData = computed(
             {
               label: 'alternatives',
               backgroundColor: '#10b981',
-              data: rankings_a.map((rank, i) => ({ x: rank, y: rankings_b[i] })),
+              data: rankings_a.map((rank, i) => ({ x: rank, y: rankings_b[i] ?? null })),
             },
           ],
-        } as unknown as ChartData<'scatter'>,
+        },
         chartOptions: {
           devicePixelRatio: 3,
           aspectRatio: 1,
@@ -128,7 +131,7 @@ const correlationsData = computed(
 )
 
 function handleSaveChart(
-  ref: InstanceType<typeof Scatter> | null | undefined,
+  ref: InstanceType<typeof Chart> | null | undefined,
   methodA: string,
   methodB: string,
 ) {
