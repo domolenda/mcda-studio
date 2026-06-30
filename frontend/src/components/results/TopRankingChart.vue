@@ -3,22 +3,14 @@
     <div
       v-for="(chart, i) in chartsData"
       :key="i"
-      class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 bg-white dark:bg-surface-900 w-[340px]"
+      class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 bg-white dark:bg-surface-900 w-85"
     >
-      <Bar
-        :ref="
-          (el) => {
-            if (el) chartRefs[i] = el
-          }
-        "
-        :data="chart.chartData"
-        :options="chart.chartOptions"
-      />
+      <Bar ref="chartRefs" :data="chart.chartData" :options="chart.chartOptions" />
       <div class="flex justify-center mt-2">
         <Button
           label="Save as PNG"
           size="small"
-          @click="saveChart(chartRefs[i].chart, `top3_${chart.method.toUpperCase()}`, isDark)"
+          @click="handleSaveChart(chartRefs[i], chart.method)"
           class="bg-primary border-primary hover:brightness-110"
         />
       </div>
@@ -44,12 +36,12 @@ import {
   Title,
 } from 'chart.js'
 
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref } from 'vue'
 
 const dataStore = useDataStore()
 const resultsStore = useResultsStore()
 const { isDark } = useTheme()
-const chartRefs = ref([])
+const chartRefs = ref<Array<InstanceType<typeof Bar> | null>>([])
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title)
 
@@ -62,7 +54,7 @@ const topAlternativesPerMethod = computed(() => {
   const currentRankings = rankings.value
   return Object.fromEntries(
     methods.value.map((method) => {
-      const methodRankings = currentRankings[method]
+      const methodRankings = currentRankings[method] ?? []
       const top3Indexes = methodRankings
         .map((rank, idx) => ({ rank, idx }))
         .sort((a, b) => a.rank - b.rank)
@@ -71,7 +63,7 @@ const topAlternativesPerMethod = computed(() => {
 
       const top3Alternatives = top3Indexes.map((idx) => ({
         alternative: alternatives.value[idx],
-        rank: methodRankings[idx],
+        rank: methodRankings[idx] ?? 0,
       }))
       return [method, top3Alternatives]
     }),
@@ -98,15 +90,6 @@ const chartsData = computed(() => {
       devicePixelRatio: 2,
       aspectRatio: 1.2,
       plugins: {
-        tooltip: {
-          callbacks: {
-            label: (item) => {
-              const rank = 4 - item.raw
-              const suffix = rank === 1 ? 'st' : rank === 2 ? 'nd' : 'rd'
-              return `${rank}${suffix} place`
-            },
-          },
-        },
         title: {
           color: textColor,
           display: true,
@@ -122,13 +105,7 @@ const chartsData = computed(() => {
         },
         y: {
           ticks: {
-            color: textColor,
-            callback: (value) => {
-              if (value === 3) return '1st'
-              if (value === 2) return '2nd'
-              if (value === 1) return '3rd'
-              return ''
-            },
+            display: false,
           },
           grid: { color: gridColor },
           grace: 1,
@@ -138,7 +115,8 @@ const chartsData = computed(() => {
   }))
 })
 
-onMounted(() => {
-  console.log(topAlternativesPerMethod.value)
-})
+function handleSaveChart(ref: InstanceType<typeof Bar> | null | undefined, method: string) {
+  if (!ref?.chart) return
+  saveChart(ref.chart, `top3_${method.toUpperCase()}`)
+}
 </script>

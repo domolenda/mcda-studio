@@ -3,26 +3,18 @@
     <div
       v-for="(correlation, i) in correlationsData"
       :key="i"
-      class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 bg-white dark:bg-surface-900 w-[420px]"
+      class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 bg-white dark:bg-surface-900 w-105"
     >
-      <Scatter
-        :ref="
-          (el) => {
-            if (el) chartRefs[i] = el
-          }
-        "
-        :data="correlation.chartData"
-        :options="correlation.chartOptions"
-      />
+      <Scatter ref="chartRefs" :data="correlation.chartData" :options="correlation.chartOptions" />
       <div class="flex justify-center mt-2">
         <Button
           label="Save as PNG"
           size="small"
           @click="
-            saveChart(
-              chartRefs[i].chart,
-              `correlation_${correlation.chartOptions.scales.x.title.text}_${correlation.chartOptions.scales.y.title.text}`,
-              isDark,
+            handleSaveChart(
+              chartRefs[i],
+              correlation.chartOptions.scales.x.title.text,
+              correlation.chartOptions.scales.y.title.text,
             )
           "
           class="bg-primary border-primary hover:brightness-110"
@@ -36,6 +28,8 @@
 import { useResultsStore } from '@/stores/resultsStore'
 import { useTheme } from '@/composables/useTheme'
 import { saveChart } from '@/utils/chartExport'
+
+import type { ChartData } from 'chart.js'
 
 import Button from 'primevue/button'
 import { Scatter } from 'vue-chartjs'
@@ -54,15 +48,15 @@ import { computed, ref } from 'vue'
 
 const resultsStore = useResultsStore()
 const { isDark } = useTheme()
-const chartRefs = ref([])
+const chartRefs = ref<Array<InstanceType<typeof Scatter> | null>>([])
 
 ChartJS.register(LinearScale, PointElement, LineElement, LineController, Tooltip, Legend, Title)
 
 const correlationsData = computed(
   () =>
     resultsStore.results?.correlations.map((correlation) => {
-      const rankings_a = resultsStore.results!.rankings[correlation.method_a]
-      const rankings_b = resultsStore.results!.rankings[correlation.method_b]
+      const rankings_a = resultsStore.results!.rankings[correlation.method_a] ?? []
+      const rankings_b = resultsStore.results!.rankings[correlation.method_b] ?? []
       const textColor = isDark.value ? '#e2e8f0' : '#1e293b'
       const gridColor = isDark.value ? '#334155' : '#e2e8f0'
 
@@ -71,7 +65,7 @@ const correlationsData = computed(
           datasets: [
             {
               label: 'perfect correlation',
-              type: 'line',
+              type: 'line' as const,
               borderColor: '#94a3b8',
               borderDash: [10, 5],
               pointRadius: 0,
@@ -88,7 +82,7 @@ const correlationsData = computed(
               data: rankings_a.map((rank, i) => ({ x: rank, y: rankings_b[i] })),
             },
           ],
-        },
+        } as unknown as ChartData<'scatter'>,
         chartOptions: {
           devicePixelRatio: 3,
           aspectRatio: 1,
@@ -132,4 +126,13 @@ const correlationsData = computed(
       }
     }) ?? [],
 )
+
+function handleSaveChart(
+  ref: InstanceType<typeof Scatter> | null | undefined,
+  methodA: string,
+  methodB: string,
+) {
+  if (!ref?.chart) return
+  saveChart(ref.chart, `correlation_${methodA}_${methodB}`)
+}
 </script>
