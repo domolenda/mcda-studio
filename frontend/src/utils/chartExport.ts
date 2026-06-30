@@ -1,10 +1,9 @@
 import type { Chart } from 'chart.js'
+import type { ChartExportOptions } from '@/types/charts'
 
 export function saveChart(chart: Chart, fileName: string) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const options = chart.options as any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const originalOptions = JSON.parse(JSON.stringify(chart.options)) as any
+  const options = chart.options as ChartExportOptions
+  const originalOptions = JSON.parse(JSON.stringify(chart.options)) as ChartExportOptions
 
   options.plugins.title.color = '#1e293b'
   options.plugins.legend.labels.color = '#1e293b'

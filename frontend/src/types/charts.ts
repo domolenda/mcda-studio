@@ -1,5 +1,10 @@
-import type { Chart } from 'chart.js'
-
-export interface ChartComponentInstance {
-  chart: Chart
+export interface ChartExportOptions {
+  plugins: {
+    title: { color: string }
+    legend: { labels: { color: string } }
+  }
+  scales: {
+    x: { ticks: { color: string }; grid: { color: string }; title: { color: string } }
+    y: { ticks: { color: string }; grid: { color: string }; title: { color: string } }
+  }
 }
