@@ -23,6 +23,7 @@ import { useDataStore } from '@/stores/dataStore'
 import { useResultsStore } from '@/stores/resultsStore'
 import { useTheme } from '@/composables/useTheme'
 import { saveChart } from '@/utils/chartExport'
+import { getChartThemeColors } from '@/utils/chartTheme'
 
 import Button from 'primevue/button'
 import { Bar } from 'vue-chartjs'
@@ -71,8 +72,7 @@ const topAlternativesPerMethod = computed(() => {
 })
 
 const chartsData = computed(() => {
-  const textColor = isDark.value ? '#e2e8f0' : '#1e293b'
-  const gridColor = isDark.value ? '#334155' : '#e2e8f0'
+  const { text: textColor, grid: gridColor } = getChartThemeColors(isDark.value)
 
   return Object.entries(topAlternativesPerMethod.value).map(([method, top3]) => ({
     method,

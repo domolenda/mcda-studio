@@ -35,14 +35,6 @@ export interface MethodParameter {
   max: number
 }
 
-export interface MethodParameter {
-  name: string
-  type: string
-  default: number
-  min: number
-  max: number
-}
-
 export interface RankingMethod {
   id: string
   name: string

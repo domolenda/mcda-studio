@@ -33,6 +33,7 @@
 import { useResultsStore } from '@/stores/resultsStore'
 import { useTheme } from '@/composables/useTheme'
 import { saveChart } from '@/utils/chartExport'
+import { getChartThemeColors } from '@/utils/chartTheme'
 
 import Button from 'primevue/button'
 import { Chart } from 'vue-chartjs'
@@ -60,8 +61,7 @@ const correlationsData = computed(
     resultsStore.results?.correlations.map((correlation) => {
       const rankings_a = resultsStore.results!.rankings[correlation.method_a] ?? []
       const rankings_b = resultsStore.results!.rankings[correlation.method_b] ?? []
-      const textColor = isDark.value ? '#e2e8f0' : '#1e293b'
-      const gridColor = isDark.value ? '#334155' : '#e2e8f0'
+      const { text: textColor, grid: gridColor } = getChartThemeColors(isDark.value)
 
       return {
         chartData: {

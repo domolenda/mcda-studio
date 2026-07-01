@@ -49,15 +49,15 @@
 <script setup lang="ts">
 import { useTheme } from '@/composables/useTheme'
 import { useRouter } from 'vue-router'
-import { useToast } from 'primevue/usetoast'
 import { ref } from 'vue'
+
+import { showToast } from '@/utils/toastUtils'
 
 import Button from 'primevue/button'
 
 import { saveStateSnapshot, resetStoreState, loadStateSnapshot } from '@/utils/stateSnapshot'
 
 const { isDark, toggleTheme } = useTheme()
-const toast = useToast()
 const fileInput = ref<HTMLInputElement | null>(null)
 
 const router = useRouter()
@@ -71,19 +71,9 @@ const NAV_ITEMS = router.options.routes
 function handleSaveButtonClick() {
   try {
     saveStateSnapshot()
-    toast.add({
-      severity: 'success',
-      summary: 'Snapshot saved',
-      detail: 'State snapshot saved successfully',
-      life: 3000,
-    })
+    showToast('State snapshot saved successfully', 'success', 'Snapshot saved')
   } catch {
-    toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'Failed to save state snapshot',
-      life: 3000,
-    })
+    showToast('Failed to save state snapshot')
   }
 }
 
@@ -98,39 +88,19 @@ function onFileSelected(event: Event) {
     if (file) {
       loadStateSnapshot(file)
       input.value = ''
-      toast.add({
-        severity: 'success',
-        summary: 'Loaded',
-        detail: 'State snapshot loaded successfully',
-        life: 3000,
-      })
+      showToast('State snapshot loaded successfully', 'success', 'Loaded')
     }
   } catch {
-    toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'Failed to load state snapshot',
-      life: 3000,
-    })
+    showToast('Failed to load state snapshot')
   }
 }
 
 function handleResetButtonClick() {
   try {
     resetStoreState()
-    toast.add({
-      severity: 'success',
-      summary: 'Cleared',
-      detail: 'Data cleared successfully',
-      life: 3000,
-    })
+    showToast('Data cleared successfully', 'success', 'Cleared')
   } catch {
-    toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'Failed to clear data',
-      life: 3000,
-    })
+    showToast('Failed to clear data')
   }
 }
 </script>

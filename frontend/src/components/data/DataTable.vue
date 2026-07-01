@@ -37,6 +37,7 @@
 
 <script setup lang="ts">
 import { useDataStore } from '@/stores/dataStore'
+import { useDataset } from '@/composables/useDataset'
 import { computed } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
@@ -44,7 +45,7 @@ import Select from 'primevue/select'
 
 const dataStore = useDataStore()
 
-const dataSet = computed(() => dataStore.data?.dataset ?? [])
+const dataSet = useDataset()
 
 const headers = computed(() => {
   const data = dataStore.data

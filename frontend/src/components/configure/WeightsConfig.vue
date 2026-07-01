@@ -56,9 +56,10 @@
 <script setup lang="ts">
 import { useDataStore } from '@/stores/dataStore'
 import { useConfigStore } from '@/stores/configStore'
-import { useToast } from 'primevue/usetoast'
 import { computed, watch } from 'vue'
 import type { TableRow, WeightsRequest } from '@/types'
+
+import { showToast } from '@/utils/toastUtils'
 
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
@@ -69,7 +70,6 @@ import { getEntropyWeights, getEqualWeights } from '@/services/api'
 
 const dataStore = useDataStore()
 const configStore = useConfigStore()
-const toast = useToast()
 
 const criteria = computed(() => dataStore.data?.criteria ?? [])
 const criterionNames = computed(() => criteria.value.map((c) => c.name))
@@ -116,12 +116,8 @@ async function handleObjectiveWeights(type: 'equal' | 'entropy') {
     }
     weights.value = response.weights
   } catch (error) {
-    toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: error instanceof Error ? error.message : 'Failed to generate weights.',
-      life: 3000,
-    })
+    const detail = error instanceof Error ? error.message : 'Failed to generate weights.'
+    showToast(detail)
     return
   }
 }
