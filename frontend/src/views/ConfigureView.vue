@@ -21,7 +21,7 @@ import MethodsConfig from '@/components/configure/MethodsConfig.vue'
 import Button from 'primevue/button'
 
 import { useRouter } from 'vue-router'
-import { useToast } from 'primevue/usetoast'
+import { showToast } from '@/utils/toastUtils'
 
 import { useDataStore } from '@/stores/dataStore'
 import { useConfigStore } from '@/stores/configStore'
@@ -42,59 +42,33 @@ const dataStore = useDataStore()
 const configStore = useConfigStore()
 const resultsStore = useResultsStore()
 const router = useRouter()
-const toast = useToast()
 
 function validateConfig(): boolean {
   if (dataStore.data === null) return false
   if (configStore.weights === null) {
-    toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'Please set weights first.',
-      life: 3000,
-    })
+    showToast('Please set weights first.')
     return false
   }
 
   const weightsSum = configStore.weights.reduce((acc, val) => acc + (val || 0), 0)
   if (Math.abs(weightsSum - 1) > 1e-9) {
-    toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'Weights must sum to 1.',
-      life: 3000,
-    })
+    showToast('Weights must sum to 1.')
     return false
   }
 
   if (configStore.selectedMethodCount === null || configStore.selectedMethodCount === 0) {
-    toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'Please select number of methods for analysis.',
-      life: 3000,
-    })
+    showToast('Please select number of methods for analysis.')
     return false
   }
   if (configStore.dataMatrix === null) return false
   if (configStore.methodsConfig.length === 0) {
-    toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'Please configure methods for analysis.',
-      life: 3000,
-    })
+    showToast('Please configure methods for analysis.')
     return false
   }
   const methodNames = configStore.methodsConfig.map((m) => m.name)
   const uniqueNames = new Set(methodNames)
   if (methodNames.length !== uniqueNames.size) {
-    toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'Selected MCDA methods must be unique.',
-      life: 3000,
-    })
+    showToast('Selected MCDA methods must be unique.')
     return false
   }
 
@@ -164,13 +138,7 @@ async function runAnalysis() {
       router.push({ name: 'results' })
     }
   } catch {
-    toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail:
-        'There was an error processing your request. Please try again later or check your data with configuration.',
-      life: 3000,
-    })
+    showToast('There was an error processing your request. Please try again later or check your data with configuration.')
   }
 }
 </script>

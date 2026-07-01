@@ -71,8 +71,9 @@ import Select from 'primevue/select'
 import InputNumber from 'primevue/inputnumber'
 import { useConfigStore } from '@/stores/configStore'
 import { computed, ref, watch, onMounted } from 'vue'
-import { useToast } from 'primevue/usetoast'
 import type { MethodBlock, ParamEntry } from '@/types'
+
+import { showToast } from '@/utils/toastUtils'
 
 import { getRankingMethods, getNormalizationMethods } from '@/services/api'
 import type {
@@ -85,8 +86,6 @@ import type {
 const rankingMethods = ref<RankingMethod[]>([])
 const normalizationMethods = ref<NormalizationMethod[]>([])
 const configStore = useConfigStore()
-const toast = useToast()
-
 const methodCountOptions = computed<number[]>(() => {
   return rankingMethods.value.map((_, i) => i + 1)
 })
@@ -100,12 +99,7 @@ const fetchData = async () => {
     rankingMethods.value = rankingResponse.methods
     normalizationMethods.value = normalizationResponse.normalizations
   } catch {
-    toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'Failed to fetch ranking and normalization methods.',
-      life: 3000,
-    })
+    showToast('Failed to fetch ranking and normalization methods.')
   }
 }
 
