@@ -18,18 +18,17 @@
 </template>
 
 <script setup lang="ts">
-import { useDataStore } from '@/stores/dataStore'
 import { useResultsStore } from '@/stores/resultsStore'
+import { useDataset } from '@/composables/useDataset'
 
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 
 import { computed } from 'vue'
 
-const dataStore = useDataStore()
 const resultsStore = useResultsStore()
 
-const dataSet = computed(() => dataStore.data?.dataset ?? [])
+const dataSet = useDataset()
 const rankings = computed(() => resultsStore.results?.rankings ?? {})
 const methodNames = computed(() => Object.keys(rankings.value))
 
