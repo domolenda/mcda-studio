@@ -14,10 +14,12 @@ def test_comparison_endpoint(monitor_data):
             "types": monitor_data["types"],
             "methods_config": [
                 {
+                    "id": "topsis_1",
                     "name": "topsis",
                     "params": [{"name": "normalization_method", "value": "min_max"}],
                 },
                 {
+                    "id": "waspas_2",
                     "name": "waspas",
                     "params": [
                         {"name": "normalization_method", "value": "linear"},
@@ -30,8 +32,8 @@ def test_comparison_endpoint(monitor_data):
     assert response.status_code == 200
     assert "rankings" in response.json()
     assert "correlations" in response.json()
-    assert "topsis" in response.json()["rankings"]
-    assert "waspas" in response.json()["rankings"]
+    assert "topsis_1" in response.json()["rankings"]
+    assert "waspas_2" in response.json()["rankings"]
 
 
 def test_comparison_single_method(monitor_data):
