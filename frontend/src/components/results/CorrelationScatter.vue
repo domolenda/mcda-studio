@@ -34,6 +34,7 @@ import { useResultsStore } from '@/stores/resultsStore'
 import { useTheme } from '@/composables/useTheme'
 import { saveChart } from '@/utils/chartExport'
 import { getChartThemeColors } from '@/utils/chartTheme'
+import { formatMethodLabel } from '@/utils/methodLabel'
 
 import Button from 'primevue/button'
 import { Chart } from 'vue-chartjs'
@@ -55,6 +56,8 @@ const { isDark } = useTheme()
 const chartRefs = ref<Array<InstanceType<typeof Chart> | null>>([])
 
 ChartJS.register(LinearScale, PointElement, LineElement, LineController, Tooltip, Legend, Title)
+
+const allMethodIds = computed(() => Object.keys(resultsStore.results?.rankings ?? {}))
 
 const correlationsData = computed(
   () =>
@@ -109,7 +112,7 @@ const correlationsData = computed(
               grid: { color: gridColor },
               title: {
                 display: true,
-                text: correlation.method_a.toUpperCase(),
+                text: formatMethodLabel(correlation.method_a, allMethodIds.value),
                 font: { size: 16 },
                 color: textColor,
               },
@@ -119,7 +122,7 @@ const correlationsData = computed(
               grid: { color: gridColor },
               title: {
                 display: true,
-                text: correlation.method_b.toUpperCase(),
+                text: formatMethodLabel(correlation.method_b, allMethodIds.value),
                 font: { size: 16 },
                 color: textColor,
               },

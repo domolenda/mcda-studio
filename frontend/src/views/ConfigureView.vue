@@ -65,12 +65,6 @@ function validateConfig(): boolean {
     showToast('Please configure methods for analysis.')
     return false
   }
-  const methodNames = configStore.methodsConfig.map((m) => m.name)
-  const uniqueNames = new Set(methodNames)
-  if (methodNames.length !== uniqueNames.size) {
-    showToast('Selected MCDA methods must be unique.')
-    return false
-  }
 
   return true
 }
@@ -122,7 +116,7 @@ async function runAnalysis() {
       }
       if (result) {
         const mappedResult: MultipleResultData = {
-          rankings: { [method.name]: result.ranking },
+          rankings: { [method.id]: result.ranking },
           correlations: [],
         }
         resultsStore.setResults(mappedResult)

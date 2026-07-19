@@ -11,7 +11,7 @@
         v-for="method in methodNames"
         :key="method"
         :field="method"
-        :header="method.toUpperCase()"
+        :header="formatMethodLabel(method, methodNames)"
       ></Column>
     </DataTable>
   </div>
@@ -20,6 +20,7 @@
 <script setup lang="ts">
 import { useResultsStore } from '@/stores/resultsStore'
 import { useDataset } from '@/composables/useDataset'
+import { formatMethodLabel } from '@/utils/methodLabel'
 
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'

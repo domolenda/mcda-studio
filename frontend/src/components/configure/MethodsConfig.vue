@@ -70,7 +70,7 @@
 import Select from 'primevue/select'
 import InputNumber from 'primevue/inputnumber'
 import { useConfigStore } from '@/stores/configStore'
-import { computed, ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import type { MethodBlock, ParamEntry } from '@/types'
 
 import { showToast } from '@/utils/toastUtils'
@@ -86,9 +86,7 @@ import type {
 const rankingMethods = ref<RankingMethod[]>([])
 const normalizationMethods = ref<NormalizationMethod[]>([])
 const configStore = useConfigStore()
-const methodCountOptions = computed<number[]>(() => {
-  return rankingMethods.value.map((_, i) => i + 1)
-})
+const methodCountOptions = [1, 2, 3]
 const selectedMethodCount = ref<number | null>(null)
 const methodBlocks = ref<MethodBlock[]>([])
 
@@ -107,6 +105,7 @@ function handleMethodCountChange() {
   if (selectedMethodCount.value === null) return
   methodBlocks.value = Array.from({ length: selectedMethodCount.value }, (_, i) => ({
     id: i,
+    methodId: null,
     selectedMethod: null,
     selectedNormalization: null,
     parameters: [],
@@ -123,6 +122,7 @@ function handleMethodChange(block: MethodBlock) {
     value: p.default,
     label: formatParamName(p.name),
   }))
+  block.methodId = `${block.selectedMethod}_${block.id + 1}`
   const paramList: ParamEntry[] = (method?.parameters ?? []).map((p) => ({
     name: p.name,
     value: p.default,
@@ -134,6 +134,7 @@ function handleMethodChange(block: MethodBlock) {
     })
   }
   const ConfigBlock = {
+    id: block.methodId,
     name: block.selectedMethod,
     params: paramList,
   }
@@ -160,6 +161,7 @@ watch(
         })
       }
       return {
+        id: newConfig.methodId ?? '',
         name: newConfig.selectedMethod ?? '',
         params: paramList,
       }
@@ -178,6 +180,7 @@ onMounted(async () => {
     const mapedConfig = configStore.methodsConfig
     methodBlocks.value = mapedConfig.map((config, idx) => ({
       id: idx,
+      methodId: config.id,
       selectedMethod: config.name,
       selectedNormalization: String(
         config.params.find((p) => p.name === 'normalization_method')?.value ?? '',

@@ -37,7 +37,7 @@ def compare_methods(
         params = {p.name: p.value for p in method_config.params}
         method_instance = method_class()
         ranking = method_instance.rank(matrix, weights, types, **params)
-        rankings[method_config.name] = ranking
+        rankings[method_config.id] = ranking
 
     correlations = []
     for method_a, method_b in combinations(rankings.keys(), 2):

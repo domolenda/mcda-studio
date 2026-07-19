@@ -7,6 +7,7 @@ class ParamsConfig(BaseModel):
 
 
 class MethodConfig(BaseModel):
+    id: str
     name: str
     params: list[ParamsConfig]
 
