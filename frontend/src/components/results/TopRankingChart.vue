@@ -24,6 +24,7 @@ import { useResultsStore } from '@/stores/resultsStore'
 import { useTheme } from '@/composables/useTheme'
 import { saveChart } from '@/utils/chartExport'
 import { getChartThemeColors } from '@/utils/chartTheme'
+import { formatMethodLabel } from '@/utils/methodLabel'
 
 import Button from 'primevue/button'
 import { Bar } from 'vue-chartjs'
@@ -80,7 +81,7 @@ const chartsData = computed(() => {
       labels: top3.map((item) => item.alternative),
       datasets: [
         {
-          label: method.toUpperCase(),
+          label: formatMethodLabel(method, methods.value),
           data: top3.map((item) => 4 - item.rank),
           backgroundColor: '#10b981',
         },
@@ -93,7 +94,7 @@ const chartsData = computed(() => {
         title: {
           color: textColor,
           display: true,
-          text: `Top 3 - ${method.toUpperCase()}`,
+          text: `Top 3 - ${formatMethodLabel(method, methods.value)}`,
           font: { size: 18 },
         },
         legend: { display: false },

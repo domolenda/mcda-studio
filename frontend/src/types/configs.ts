@@ -4,6 +4,7 @@ export type Params = {
 }
 
 export interface ConfigData {
+  id: string
   name: string
   params: Params[]
 }
@@ -15,6 +16,7 @@ export interface ParamEntry {
 
 export interface MethodBlock {
   id: number
+  methodId: string | null
   selectedMethod: string | null
   selectedNormalization: string | null
   parameters: {
