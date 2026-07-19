@@ -70,7 +70,7 @@
 import Select from 'primevue/select'
 import InputNumber from 'primevue/inputnumber'
 import { useConfigStore } from '@/stores/configStore'
-import { computed, ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import type { MethodBlock, ParamEntry } from '@/types'
 
 import { showToast } from '@/utils/toastUtils'
@@ -86,9 +86,7 @@ import type {
 const rankingMethods = ref<RankingMethod[]>([])
 const normalizationMethods = ref<NormalizationMethod[]>([])
 const configStore = useConfigStore()
-const methodCountOptions = computed<number[]>(() => {
-  return rankingMethods.value.map((_, i) => i + 1)
-})
+const methodCountOptions = [1, 2, 3]
 const selectedMethodCount = ref<number | null>(null)
 const methodBlocks = ref<MethodBlock[]>([])
 
