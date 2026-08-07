@@ -5,10 +5,12 @@ from app.schemas.ranking import (
     RankingResponse,
     VIKORRequest,
     WASPASRequest,
+    ARASRequest,
 )
 from app.services.methods.topsis import TOPSIS
 from app.services.methods.vikor import VIKOR
 from app.services.methods.waspas import WASPAS
+from app.services.methods.aras import ARAS
 
 router = APIRouter(prefix="/ranking")
 
@@ -57,6 +59,22 @@ def rank_vikor(request: VIKORRequest) -> RankingResponse:
 
     try:
         result = vikor.rank(matrix, weights, types, v)
+        return RankingResponse(ranking=result)
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+
+@router.post("/aras", response_model=RankingResponse)
+def rank_aras(request: ARASRequest) -> RankingResponse:
+    matrix = request.matrix
+    weights = request.weights
+    types = request.types
+    normalization_method = request.normalization_method
+
+    aras = ARAS()
+
+    try:
+        result = aras.rank(matrix, weights, types, normalization_method)
         return RankingResponse(ranking=result)
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
