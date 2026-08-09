@@ -6,7 +6,7 @@ services:
         - VITE_API_URL=http://127.0.0.1:8000
         - VITE_APP_VERSION=1.0
     ports:
-      - "5173:80"
+      - "3000:80"
   mcda-backend:
     build: ./backend
     ports:
@@ -14,4 +14,4 @@ services:
     environment:
       - APP_TITLE=MCDA Studio
       - APP_VERSION=0.1.0
-      - FRONTEND_ORIGIN=http://127.0.0.1:5173
+      - FRONTEND_ORIGIN=http://127.0.0.1:3000

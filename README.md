@@ -45,7 +45,7 @@ To run the full application using Docker:
 ```bash
 docker-compose up --build
 ```
-Frontend will be available at `http://localhost:5173`, backend at `http://localhost:8000` and documentation at `http://localhost:8000/docs`.
+Frontend will be available at `http://127.0.0.1:3000`, backend at `http://127.0.0.1:8000` and documentation at `http://127.0.0.1:8000/docs`.
 
 ## Setup Instructions
 
