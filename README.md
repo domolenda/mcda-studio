@@ -6,7 +6,8 @@ MCDA-studio to aplikacja webowa do analizy wielokryterialnej (MCDA/MCDM).
 Do głównych funkcjonalności należą:
 
 - Import danych
-- Konfiguracja metod (TOPSIS, VIKOR, WASPAS)
+- Konfiguracja metod (TOPSIS, VIKOR, WASPAS, ARAS)
+- 4 metody normalizacji (Min-Max, Linear, Vector, Sum)
 - Generowanie rankingów
 - Wizualizacja i porównanie wyników
 
@@ -16,7 +17,8 @@ MCDA-studio is a web application for multi-criteria decision analysis (MCDA/MCDM
 Its main features include:
 
 - Data import
-- Method configuration (TOPSIS, VIKOR, WASPAS)
+- Method configuration (TOPSIS, VIKOR, WASPAS, ARAS)
+- 4 normalization methods (Min-Max, Linear, Vector, Sum)
 - Ranking generation
 - Visualization and comparison of results
 

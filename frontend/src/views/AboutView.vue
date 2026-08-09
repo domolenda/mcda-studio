@@ -9,7 +9,8 @@
         <p class="mt-2">Its main features include:</p>
         <ul class="list-disc list-inside mt-2">
           <li>Data import</li>
-          <li>Method configuration (TOPSIS, VIKOR, WASPAS)</li>
+          <li>Method configuration (TOPSIS, VIKOR, WASPAS, ARAS)</li>
+          <li>4 normalization methods (Min-Max, Linear, Vector, Sum)</li>
           <li>Ranking generation</li>
           <li>Visualization and comparison of results</li>
         </ul>
