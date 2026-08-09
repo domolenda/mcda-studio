@@ -80,3 +80,28 @@ def test_vikor_invalid_weights_sum_endpoint(monitor_data):
         },
     )
     assert response.status_code == 422
+
+
+def test_aras_endpoint(monitor_data):
+    response = client.post(
+        "/ranking/aras",
+        json={
+            "matrix": monitor_data["matrix"],
+            "weights": monitor_data["weights"],
+            "types": monitor_data["types"],
+        },
+    )
+    assert response.status_code == 200
+    assert response.json()["ranking"] == [9, 3, 5, 1, 8, 6, 2, 7, 4]
+
+
+def test_aras_invalid_weights_sum_endpoint(monitor_data):
+    response = client.post(
+        "/ranking/aras",
+        json={
+            "matrix": monitor_data["matrix"],
+            "weights": [0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+            "types": monitor_data["types"],
+        },
+    )
+    assert response.status_code == 422
