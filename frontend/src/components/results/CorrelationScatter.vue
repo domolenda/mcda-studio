@@ -44,6 +44,7 @@ import {
   PointElement,
   LineElement,
   LineController,
+  ScatterController,
   Tooltip,
   Legend,
   Title,
@@ -55,7 +56,7 @@ const resultsStore = useResultsStore()
 const { isDark } = useTheme()
 const chartRefs = ref<Array<InstanceType<typeof Chart> | null>>([])
 
-ChartJS.register(LinearScale, PointElement, LineElement, LineController, Tooltip, Legend, Title)
+ChartJS.register(LinearScale, PointElement, LineElement, LineController, ScatterController, Tooltip, Legend, Title)
 
 const allMethodIds = computed(() => Object.keys(resultsStore.results?.rankings ?? {}))
 
