@@ -27,12 +27,12 @@ const router = createRouter({
       component: () => import('@/views/ResultsView.vue'),
       meta: { title: 'Results', showInMenu: true },
     },
-    // {
-    //   path: '/how-to-use',
-    //   name: 'how-to-use',
-    //   component: () => import('@/views/HowToView.vue'),
-    //   meta: { title: 'How to Use', showInMenu: true },
-    // },
+    {
+      path: '/how-to-use',
+      name: 'how-to-use',
+      component: () => import('@/views/HowToView.vue'),
+      meta: { title: 'How to Use', showInMenu: true },
+    },
     {
       path: '/about',
       name: 'about',
